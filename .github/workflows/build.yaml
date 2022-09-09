@@ -21,7 +21,7 @@ jobs:
     defaults:
       run:
         shell: bash
-        working-directory: wheels-app-backend
+        working-directory: ..
     steps:
       - uses: actions/checkout@v2
       - name: Set up JDK 8
