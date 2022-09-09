@@ -15,7 +15,7 @@ jobs:
   build:
     strategy:
       matrix:
-        os: [ ubuntu-20.04, windows-2019, macos-10.15 ]
+        os: [ windows-2019, macos-10.15 ]
     name: ${{ matrix.os }} build
     runs-on: ${{ matrix.os }}
     defaults:
