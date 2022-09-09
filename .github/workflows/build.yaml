@@ -18,7 +18,10 @@ jobs:
         os: [ ubuntu-20.04, windows-2019, macos-10.15 ]
     name: ${{ matrix.os }} build
     runs-on: ${{ matrix.os }}
-
+    defaults:
+      run:
+        shell: bash
+        working-directory: wheels-app-backend
     steps:
       - uses: actions/checkout@v2
       - name: Set up JDK 8
