@@ -22,7 +22,7 @@ jobs:
     defaults:
       run:
         shell: bash
-        working-directory: app
+        working-directory: .
 
     steps:
       - uses: actions/checkout@v3
