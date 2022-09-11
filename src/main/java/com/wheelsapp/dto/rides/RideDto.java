@@ -10,8 +10,8 @@ public class RideDto {
     private String idUser;
     private String idCar;
     private Date journeyDate;
-    private Date hourOutput;
-    private Date hourInput;
+    private Date houDeparture;
+    private Date hourArrival;
     private ArrayList<String> route;
     private Integer cost;
     private Integer availableSeats;
@@ -24,12 +24,12 @@ public class RideDto {
 
     public RideDto () {}
 
-    public RideDto(String idUser, String idCar, Date journeyDate, Date hourOutput, Date hourInput, ArrayList<String> route, Integer cost, Integer availableSeats, Integer seatsReserve, boolean isActive, boolean hasStarted, Integer code, ArrayList<String> listPassenger, ArrayList<String> listStops) {
+    public RideDto(String idUser, String idCar, Date journeyDate, Date houDeparture, Date hourArrival, ArrayList<String> route, Integer cost, Integer availableSeats, Integer seatsReserve, boolean isActive, boolean hasStarted, Integer code, ArrayList<String> listPassenger, ArrayList<String> listStops) {
         this.idUser = idUser;
         this.idCar = idCar;
         this.journeyDate = journeyDate;
-        this.hourOutput = hourOutput;
-        this.hourInput = hourInput;
+        this.houDeparture = houDeparture;
+        this.hourArrival = hourArrival;
         this.route = route;
         this.cost = cost;
         this.availableSeats = availableSeats;
@@ -65,20 +65,20 @@ public class RideDto {
         this.journeyDate = journeyDate;
     }
 
-    public Date getHourOutput() {
-        return hourOutput;
+    public Date getHouDeparture() {
+        return houDeparture;
     }
 
-    public void setHourOutput(Date hourOutput) {
-        this.hourOutput = hourOutput;
+    public void setHouDeparture(Date houDeparture) {
+        this.houDeparture = houDeparture;
     }
 
-    public Date getHourInput() {
-        return hourInput;
+    public Date getHourArrival() {
+        return hourArrival;
     }
 
-    public void setHourInput(Date hourInput) {
-        this.hourInput = hourInput;
+    public void setHourArrival(Date hourArrival) {
+        this.hourArrival = hourArrival;
     }
 
     public ArrayList<String> getRoute() {
