@@ -1,5 +1,8 @@
 package com.wheelsapp.utils.errors;
 
+/**
+ * @author Laura Garcia
+ */
 public enum ErrorUser {
     MAX_LENGTH_NAME ("the name should be less than 40 characters"),
     MAX_LENGTH_LASTNAME("The last name should be less than 60 characters"),
@@ -16,3 +19,4 @@ public enum ErrorUser {
         return label;
     }
 }
+
