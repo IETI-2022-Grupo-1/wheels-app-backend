@@ -7,31 +7,30 @@ import java.util.Date;
  * @author Juan Cadavid
  */
 public class RideDto {
-    private String idUser;
+    private String id;
+    private String idDriver;
     private String idCar;
     private Date journeyDate;
     private Date houDeparture;
     private Date hourArrival;
     private ArrayList<String> route;
-    private Integer cost;
     private Integer availableSeats;
     private Integer seatsReserve;
-    private boolean isActive;
-    private boolean hasStarted;
+    private Boolean isActive;
+    private Boolean hasStarted;
     private Integer code;
     private ArrayList<String> listPassenger;
     private ArrayList<String> listStops;
 
-    public RideDto () {}
+    public RideDto(){}
 
-    public RideDto(String idUser, String idCar, Date journeyDate, Date houDeparture, Date hourArrival, ArrayList<String> route, Integer cost, Integer availableSeats, Integer seatsReserve, boolean isActive, boolean hasStarted, Integer code, ArrayList<String> listPassenger, ArrayList<String> listStops) {
-        this.idUser = idUser;
+    public RideDto(String idDriver, String idCar, Date journeyDate, Date houDeparture, Date hourArrival, ArrayList<String> route, Integer availableSeats, Integer seatsReserve, Boolean isActive, Boolean hasStarted, Integer code, ArrayList<String> listPassenger, ArrayList<String> listStops) {
+        this.idDriver = idDriver;
         this.idCar = idCar;
         this.journeyDate = journeyDate;
         this.houDeparture = houDeparture;
         this.hourArrival = hourArrival;
         this.route = route;
-        this.cost = cost;
         this.availableSeats = availableSeats;
         this.seatsReserve = seatsReserve;
         this.isActive = isActive;
@@ -41,12 +40,12 @@ public class RideDto {
         this.listStops = listStops;
     }
 
-    public String getIdUser() {
-        return idUser;
+    public String getIdDriver() {
+        return idDriver;
     }
 
-    public void setIdUser(String idUser) {
-        this.idUser = idUser;
+    public void setIdDriver(String idDriver) {
+        this.idDriver = idDriver;
     }
 
     public String getIdCar() {
@@ -65,12 +64,12 @@ public class RideDto {
         this.journeyDate = journeyDate;
     }
 
-    public Date getHouDeparture() {
+    public Date getHourDeparture() {
         return houDeparture;
     }
 
-    public void setHouDeparture(Date houDeparture) {
-        this.houDeparture = houDeparture;
+    public void setHourDeparture(Date hourDeparture) {
+        this.houDeparture = hourDeparture;
     }
 
     public Date getHourArrival() {
@@ -85,16 +84,32 @@ public class RideDto {
         return route;
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public Date getHouDeparture() {
+        return houDeparture;
+    }
+
+    public void setHouDeparture(Date houDeparture) {
+        this.houDeparture = houDeparture;
+    }
+
+    public Boolean getActive() {
+        return isActive;
+    }
+
+    public void setActive(Boolean active) {
+        isActive = active;
+    }
+
     public void setRoute(ArrayList<String> route) {
         this.route = route;
-    }
-
-    public Integer getCost() {
-        return cost;
-    }
-
-    public void setCost(Integer cost) {
-        this.cost = cost;
     }
 
     public Integer getAvailableSeats() {
@@ -113,19 +128,19 @@ public class RideDto {
         this.seatsReserve = seatsReserve;
     }
 
-    public boolean isActive() {
+    public Boolean getIsActive() {
         return isActive;
     }
 
-    public void setActive(boolean active) {
+    public void setIsActive(Boolean active) {
         isActive = active;
     }
 
-    public boolean isHasStarted() {
+    public Boolean getHasStarted() {
         return hasStarted;
     }
 
-    public void setHasStarted(boolean hasStarted) {
+    public void setHasStarted(Boolean hasStarted) {
         this.hasStarted = hasStarted;
     }
 
