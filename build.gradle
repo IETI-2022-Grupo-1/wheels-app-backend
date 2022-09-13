@@ -14,13 +14,7 @@ repositories {
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
-	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testImplementation 'org.springframework.security:spring-security-test'
-	implementation 'javax.ws.rs:javax.ws.rs-api:2.0'
-	implementation 'org.springframework.security:spring-security-crypto'
-	implementation 'io.jsonwebtoken:jjwt:0.9.1'
 	implementation group: 'org.modelmapper', name: 'modelmapper', version: '2.1.1'
 }
 

@@ -8,6 +8,8 @@ import java.util.List;
 public interface VehicleService {
     Vehicle create(Vehicle vehicle);
     List<Vehicle> getAllVehicle();
-    Vehicle findById(String id);
+
+    List<Vehicle> findAllByIdUser(String idUser);
+    Vehicle getByVehicleId(String id);
     Vehicle disableById(String id);
 }
