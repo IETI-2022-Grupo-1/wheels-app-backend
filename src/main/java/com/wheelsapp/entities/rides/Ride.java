@@ -2,8 +2,9 @@ package com.wheelsapp.entities.rides;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import com.wheelsapp.dto.rides.rideDto;
+import com.wheelsapp.dto.rides.RideDto;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -14,8 +15,8 @@ public class Ride {
     private String idDriver;
     private String idCar;
     private Date journeyDate;
-    private Date houDeparture;
-    private Date hourArrival;
+    private Integer houDeparture;
+    private Integer hourArrival;
     private ArrayList<String> route;
     private Integer availableSeats;
     private Integer seatsReserve;
@@ -27,24 +28,21 @@ public class Ride {
 
     public Ride(){}
 
-    public Ride(String id, rideDto rideDTO, Date journeyDate, Date houDeparture, Date hourArrival) {
-        this.id = id;
+    public Ride(RideDto rideDTO) {
         this.idDriver = rideDTO.getIdDriver();
         this.idCar = rideDTO.getIdCar();
-        this.journeyDate = journeyDate;
-        this.houDeparture = houDeparture;
-        this.hourArrival = hourArrival;
+        this.journeyDate = Date.from(Instant.now());
+        this.houDeparture = Date.from(Instant.now()).getHours();
+        this.hourArrival = Date.from(Instant.now()).getHours();
         this.route = rideDTO.getRoute();
         this.availableSeats = rideDTO.getAvailableSeats();
         this.seatsReserve = rideDTO.getSeatsReserve();
-        this.isActive = rideDTO.getActive();
+        this.isActive = rideDTO.getIsActive();
         this.hasStarted = rideDTO.getHasStarted();
         this.code = rideDTO.getCode();
         this.listPassenger = rideDTO.getListPassenger();
         this.listStops = rideDTO.getListStops();
     }
-
-
 
     public String getId() {
         return id;
@@ -78,19 +76,19 @@ public class Ride {
         this.journeyDate = journeyDate;
     }
 
-    public Date getHourDeparture() {
+    public Integer getHourDeparture() {
         return houDeparture;
     }
 
-    public void setHourDeparture(Date hourDeparture) {
+    public void setHourDeparture(Integer hourDeparture) {
         this.houDeparture = hourDeparture;
     }
 
-    public Date getHourArrival() {
+    public Integer getHourArrival() {
         return hourArrival;
     }
 
-    public void setHourArrival(Date hourArrival) {
+    public void setHourArrival(Integer hourArrival) {
         this.hourArrival = hourArrival;
     }
 
@@ -118,11 +116,11 @@ public class Ride {
         this.seatsReserve = seatsReserve;
     }
 
-    public Boolean getActive() {
+    public Boolean getIsActive() {
         return isActive;
     }
 
-    public void setActive(Boolean active) {
+    public void setIsActive(Boolean active) {
         isActive = active;
     }
 

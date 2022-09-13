@@ -6,12 +6,12 @@ import java.util.Date;
 /*
 * @author Julian Peña
 */
-public class rideDto {
+public class RideDto {
     private String idDriver;
     private String idCar;
     private Date journeyDate;
-    private Date houDeparture;
-    private Date hourArrival;
+    private Integer houDeparture;
+    private Integer hourArrival;
     private ArrayList<String> route;
     private Integer availableSeats;
     private Integer seatsReserve;
@@ -21,11 +21,14 @@ public class rideDto {
     private ArrayList<String> listPassenger;
     private ArrayList<String> listStops;
 
-    public rideDto(){}
+    public RideDto(){}
 
-    public rideDto(String idDriver, String idCar, ArrayList<String> route, Integer availableSeats, Integer seatsReserve, Boolean isActive, Boolean hasStarted, Integer code, ArrayList<String> listPassenger, ArrayList<String> listStops) {
+    public RideDto(String idDriver, String idCar, Date journeyDate, Integer houDeparture, Integer hourArrival, ArrayList<String> route, Integer availableSeats, Integer seatsReserve, Boolean isActive, Boolean hasStarted, Integer code, ArrayList<String> listPassenger, ArrayList<String> listStops) {
         this.idDriver = idDriver;
         this.idCar = idCar;
+        this.journeyDate = journeyDate;
+        this.houDeparture = houDeparture;
+        this.hourArrival = hourArrival;
         this.route = route;
         this.availableSeats = availableSeats;
         this.seatsReserve = seatsReserve;
@@ -60,19 +63,19 @@ public class rideDto {
         this.journeyDate = journeyDate;
     }
 
-    public Date getHourDeparture() {
+    public Integer getHourDeparture() {
         return houDeparture;
     }
 
-    public void setHourDeparture(Date hourDeparture) {
+    public void setHourDeparture(Integer hourDeparture) {
         this.houDeparture = hourDeparture;
     }
 
-    public Date getHourArrival() {
+    public Integer getHourArrival() {
         return hourArrival;
     }
 
-    public void setHourArrival(Date hourArrival) {
+    public void setHourArrival(Integer hourArrival) {
         this.hourArrival = hourArrival;
     }
 
@@ -100,11 +103,11 @@ public class rideDto {
         this.seatsReserve = seatsReserve;
     }
 
-    public Boolean getActive() {
+    public Boolean getIsActive() {
         return isActive;
     }
 
-    public void setActive(Boolean active) {
+    public void setIsActive(Boolean active) {
         isActive = active;
     }
 
