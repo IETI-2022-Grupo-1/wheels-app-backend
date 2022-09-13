@@ -1,52 +1,69 @@
 package com.wheelsapp.entities.organizations;
 
-import com.wheelsapp.dto.organizations.CiudadDTO;
-import com.wheelsapp.dto.organizations.DepartamentoDTO;
-import com.wheelsapp.dto.organizations.OrganizationDTO;
 import org.springframework.data.annotation.Id;
 
-import javax.validation.constraints.Size;
+import java.time.Instant;
 import java.util.Date;
 
 /**
  * @author Laura Garcia
  */
 public class Organization {
-
-    private String nombre;
     @Id
+    private String id;
+    private String name;
+
     private String NIT;
 
-    private Ciudad ciudad;
+    private String city;
 
-    private Departamento departamento;
+    private String departament;
 
-    private String telefono;
+    private String phone;
 
     private Date createdAt;
 
     private Date lastUpdate;
 
 
-    public Organization(String nombre, String NIT, Ciudad ciudad, Departamento departamento, String telefono, Date createdAt, Date lastUpdate) {
-        this.nombre = nombre;
+    public Organization(){
+        this.createdAt = Date.from(Instant.now());
+        this.lastUpdate = Date.from(Instant.now());
+    }
+    // Creating Organization with all params
+    public Organization(String name, String NIT, String city, String departament, String phone, Date createdAt, Date lastUpdate) {
+        this();
+        this.name = name;
         this.NIT = NIT;
-        this.ciudad = ciudad;
-        this.departamento = departamento;
-        this.telefono = telefono;
+        this.city = city;
+        this.departament = departament;
+        this.phone = phone;
         this.createdAt = createdAt;
         this.lastUpdate = lastUpdate;
     }
-
-    public Organization() {
+    // Creatioón withouth createdAt and lastUpdate
+    public Organization(String name, String NIT, String city, String departament, String phone) {
+        this();
+        this.name = name;
+        this.NIT = NIT;
+        this.city = city;
+        this.departament = departament;
+        this.phone = phone;
+    }
+    public String getId() {
+        return id;
     }
 
-    public String getNombre() {
-        return nombre;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getNIT() {
@@ -58,13 +75,28 @@ public class Organization {
     }
 
 
-
-    public String getTelefono() {
-        return telefono;
+    public String getCity() {
+        return city;
     }
 
-    public void setTelefono(String telefono) {
-        this.telefono = telefono;
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getDepartament() {
+        return departament;
+    }
+
+    public void setDepartament(String departament) {
+        this.departament = departament;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public Date getCreatedAt() {
@@ -83,28 +115,18 @@ public class Organization {
         this.lastUpdate = lastUpdate;
     }
 
-    public Ciudad getCiudad() {
-        return ciudad;
+
+/**
+    public List<City> getCiudades() {
+        return Arrays.asList(City.values());
     }
 
-    public void setCiudad(Ciudad ciudad) {
-        this.ciudad = ciudad;
+
+
+    public List<Departament> getDepartamentos() {
+        return Arrays.asList(Departament.values());
     }
 
-    public Departamento getDepartamento() {
-        return departamento;
-    }
-
-    public void setDepartamento(Departamento departamento) {
-        this.departamento = departamento;
-    }
-
-    public OrganizationDTO changingEntitieToDTO(Organization organization) {
-        CiudadDTO ciudadDTO = organization.getCiudad().changingToDTO(organization.getCiudad());
-        DepartamentoDTO departamentoDTO = organization.getDepartamento().changingToDTO(organization.getDepartamento());
-        OrganizationDTO organizationDTO = new OrganizationDTO(organization.getNombre(), organization.getNIT(), ciudadDTO,
-                departamentoDTO, organization.telefono, organization.createdAt, organization.lastUpdate);
-        return organizationDTO;
-    }
+**/
 
 }

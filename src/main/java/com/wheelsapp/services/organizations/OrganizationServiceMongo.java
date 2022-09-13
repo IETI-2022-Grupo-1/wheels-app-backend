@@ -1,60 +1,61 @@
 package com.wheelsapp.services.organizations;
 
-import com.wheelsapp.entities.organizations.Ciudad;
-import com.wheelsapp.entities.organizations.Departamento;
 import com.wheelsapp.entities.organizations.Organization;
-import com.wheelsapp.repositories.users.UserRepository;
+import com.wheelsapp.repositories.organizations.OrganizationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class OrganizationServiceMongo implements OrganizationService,DepartamentoService,CiudadesService{
+public class OrganizationServiceMongo implements OrganizationService{
 
-    private final OrganizationService organizationService;
-    private final CiudadesService ciudadesService;
-    private final DepartamentoService departamentoService;
-    public OrganizationServiceMongo(@Autowired OrganizationService organizationService,@Autowired CiudadesService ciudadesService,
-                                     @Autowired DepartamentoService departamentoService){
-        this.organizationService = organizationService;
-        this.ciudadesService = ciudadesService;
-        this.departamentoService = departamentoService;
+    private final OrganizationRepository organizationRepository;
+
+    public OrganizationServiceMongo(@Autowired OrganizationRepository organizationRepository){
+        this.organizationRepository = organizationRepository;
     }
 
     @Override
     public Organization create(Organization organization) {
-        return null;
+        organizationRepository.save(organization);
+        return organization;
     }
 
     @Override
-    public Organization findById(String id) {
-        return null;
+    public Organization findById(String id){
+        return organizationRepository.findById(id).get();
     }
 
     @Override
     public List<Organization> getAll() {
-        return null;
+        return organizationRepository.findAll();
     }
 
     @Override
     public boolean deleteById(String id) {
-        return false;
+        boolean flag;
+        if (organizationRepository.existsById(id)){
+            flag = true;
+            organizationRepository.deleteById(id);
+        }else{ flag = false;}
+        return flag;
     }
 
     @Override
     public Organization update(Organization organization, String userId) {
-        return null;
+
+        if (organizationRepository.existsById(userId)) {
+            Organization oldOrganization = findById(userId);
+            oldOrganization.setCity(organization.getCity());
+            oldOrganization.setDepartament(organization.getDepartament());
+            oldOrganization.setCreatedAt(organization.getCreatedAt());
+            oldOrganization.setNIT(organization.getNIT());
+            oldOrganization.setLastUpdate(organization.getLastUpdate());
+            oldOrganization.setName(organization.getName());
+            return organizationRepository.save(oldOrganization);
+        }return null;
     }
 
-    @Override
-    public List<Departamento> getAllDepartaments() {
-        return null;
-    }
 
-
-    @Override
-    public List<Ciudad> getAllCitys() {
-        return null;
-    }
 }

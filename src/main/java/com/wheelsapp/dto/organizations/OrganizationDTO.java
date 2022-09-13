@@ -1,10 +1,7 @@
 package com.wheelsapp.dto.organizations;
 
-import com.wheelsapp.entities.organizations.Ciudad;
-import com.wheelsapp.entities.organizations.Departamento;
-import com.wheelsapp.entities.organizations.Organization;
-
 import javax.validation.constraints.Size;
+import java.time.Instant;
 import java.util.Date;
 
 /**
@@ -12,41 +9,53 @@ import java.util.Date;
  */
 public class OrganizationDTO {
     @Size(max = 150)
-    private String nombre;
+    private String name;
 
     @Size(max = 40)
     private String NIT;
 
-    private CiudadDTO ciudadDTO;
+    private String city;
 
-    private DepartamentoDTO departamentoDTO;
+    private String departament;
 
-    private String telefono;
+    private String phone;
 
     private Date createdAt;
 
     private Date lastUpdate;
 
 
-    public OrganizationDTO(String nombre, String NIT, CiudadDTO ciudadDTO,DepartamentoDTO departamentoDTO, String telefono, Date createdAt, Date lastUpdate){
-        this.nombre = nombre;
+    public OrganizationDTO(String name, String NIT, String city, String departament, String phone, Date createdAt, Date lastUpdate){
+        this();
+        this.name = name;
         this.NIT = NIT;
-        this.ciudadDTO = ciudadDTO;
-        this.departamentoDTO = departamentoDTO;
-        this.telefono = telefono;
+        this.city = city;
+        this.departament = departament;
+        this.phone = phone;
         this.createdAt = createdAt;
         this.lastUpdate = lastUpdate;
     }
 
+    public OrganizationDTO(String name, String NIT, String city, String departament, String phone) {
+        this();
+        this.name = name;
+        this.NIT = NIT;
+        this.city = city;
+        this.departament = departament;
+        this.phone = phone;
+    }
+
     public OrganizationDTO(){
+        this.createdAt = Date.from(Instant.now());
+        this.lastUpdate = Date.from(Instant.now());
     }
 
-    public String getNombre() {
-        return nombre;
+    public String getName() {
+        return name;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getNIT() {
@@ -57,28 +66,31 @@ public class OrganizationDTO {
         this.NIT = NIT;
     }
 
-    public CiudadDTO getCiudadDTO() {
-        return ciudadDTO;
+    public String getCity() {
+        return city;
     }
 
-    public void setCiudadDTO(CiudadDTO ciudadDTO) {
-        this.ciudadDTO = ciudadDTO;
+    public void setCity(String city) {
+        this.city = city;
     }
 
-    public DepartamentoDTO getDepartamentoDTO() {
-        return departamentoDTO;
+    public void setDepartament(String departament) {
+        this.departament = departament;
     }
 
-    public void setDepartamentoDTO(DepartamentoDTO departamentoDTO) {
-        this.departamentoDTO = departamentoDTO;
+
+
+    public String getDepartament() {
+        return departament;
     }
 
-    public String getTelefono() {
-        return telefono;
+
+    public String getPhone() {
+        return phone;
     }
 
-    public void setTelefono(String telefono) {
-        this.telefono = telefono;
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public Date getCreatedAt() {
@@ -96,13 +108,13 @@ public class OrganizationDTO {
     public void setLastUpdate(Date lastUpdate) {
         this.lastUpdate = lastUpdate;
     }
-
-    public Organization changingDTOtoEntitie(OrganizationDTO organizationDTO) {
-        Ciudad ciudad = organizationDTO.getCiudadDTO().changingToEntitie(organizationDTO.getCiudadDTO());
-        Departamento departamento = organizationDTO.getDepartamentoDTO().changingToEntitie(organizationDTO.getDepartamentoDTO());
-        Organization organization = new Organization(organizationDTO.getNombre(),organizationDTO.getNIT(),ciudad,
-                departamento,organizationDTO.getTelefono(),organizationDTO.getCreatedAt(),organizationDTO.getLastUpdate());
-        return organization;
+    
+    // Proximamente para colección departamentos y bla bla bla 
+    /**
+    public List<Departament> getDepartaments() {
+        return Arrays.asList(Departament.values());
     }
+    public List<City> getCiudades() {
+        return Arrays.asList(City.values());}**/
 
 }
