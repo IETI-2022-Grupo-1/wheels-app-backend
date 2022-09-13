@@ -12,4 +12,5 @@ public interface VehicleService {
     List<Vehicle> findAllByIdUser(String idUser);
     Vehicle getByVehicleId(String id);
     Vehicle disableById(String id);
+    Vehicle updateVehicle(Vehicle vehicle);
 }

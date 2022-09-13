@@ -37,6 +37,7 @@ public class VehicleServiceIMPL implements VehicleService {
     }
     @Override
     public List<Vehicle> getAllVehicle() {
+
         return vehicleRepository.findAll();
     }
 
@@ -46,10 +47,20 @@ public class VehicleServiceIMPL implements VehicleService {
         return vehicleRepository.findById(id).orElse(null);
     }
 
+
     @Override
     public Vehicle disableById(String id) {
-        vehicleRepository.deleteById(id);
-
-        return null;
+        Vehicle vehicle =vehicleRepository.findById(id).orElse(null);
+        vehicle.setIsActive(false);
+        vehicle.setLastUpdate(new Date());
+        vehicleRepository.save(vehicle);
+        return vehicle;
+    }
+    @Override
+    public Vehicle updateVehicle(Vehicle vehicle){
+        Vehicle vehicle1 = vehicleRepository.findById(vehicle.getIdVehicle()).orElse(null);
+        vehicle1.setLastUpdate(new Date());
+        vehicleRepository.save(vehicle);
+        return vehicle;
     }
 }
