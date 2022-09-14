@@ -1,9 +1,9 @@
-package com.wheelsapp.controllers;
+package com.wheelsapp.controllers.cars;
 
 
-import com.wheelsapp.dto.VehicleDto;
-import com.wheelsapp.entities.Vehicle;
-import com.wheelsapp.service.VehicleService;
+import com.wheelsapp.dto.cars.VehicleDto;
+import com.wheelsapp.entities.cars.Vehicle;
+import com.wheelsapp.services.cars.VehicleService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,15 +24,15 @@ public class VehicleController {
 
     @PostMapping
     public ResponseEntity<?> createVehicle(@RequestBody Vehicle vehicle){
-        try {
+        //try {
             Vehicle vehicle2 = vehicleService.create(vehicle);
             ModelMapper modelMapper = new ModelMapper();
             VehicleDto vehicle1 = modelMapper.map(vehicle2, VehicleDto.class);
             return new ResponseEntity<>(vehicle1, HttpStatus.CREATED);
-        }
-        catch (Exception e){
+        /*}
+         (Exception e){
             return new ResponseEntity<>(HttpStatus.CONFLICT);
-        }
+        }**/
     }
     @GetMapping("/user/{id}")
     public ResponseEntity<?> consultByUser(@PathVariable String id ){
@@ -80,10 +80,10 @@ public class VehicleController {
         }
     }
 
-    @PutMapping
-    public ResponseEntity<?> modifyVehicle(@RequestBody Vehicle vehicle){
+    @PutMapping("/{id}")
+    public ResponseEntity<?> modifyVehicle(@RequestBody Vehicle vehicle,@PathVariable String id ){
         try {
-            Vehicle vehicle2 = vehicleService.updateVehicle(vehicle);
+            Vehicle vehicle2 = vehicleService.updateVehicle(vehicle, id);
             ModelMapper modelMapper = new ModelMapper();
             VehicleDto vehicle1 = modelMapper.map(vehicle2, VehicleDto.class);
             return new ResponseEntity<>(vehicle1, HttpStatus.OK);

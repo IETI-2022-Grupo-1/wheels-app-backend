@@ -1,7 +1,7 @@
-package com.wheelsapp.repositories;
+package com.wheelsapp.repositories.cars;
 
 
-import com.wheelsapp.entities.Vehicle;
+import com.wheelsapp.entities.cars.Vehicle;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 

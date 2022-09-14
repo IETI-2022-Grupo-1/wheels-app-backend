@@ -1,4 +1,4 @@
-package com.wheelsapp.dto;
+package com.wheelsapp.dto.cars;
 
 public class VehicleDto {
     private String idUser;

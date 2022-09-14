@@ -1,4 +1,4 @@
-package com.wheelsapp.entities;
+package com.wheelsapp.entities.cars;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -7,12 +7,12 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.Collections;
 import java.util.Date;
 
-@Document(collection ="Cars")
+@Document(collection ="cars")
 public class Vehicle {
     private String idUser;
 
     @Id
-    @Indexed( unique = true )
+
     private String idVehicle;
     private String model;
     private String soat;
