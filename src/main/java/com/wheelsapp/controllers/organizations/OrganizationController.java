@@ -49,14 +49,11 @@ public class OrganizationController {
     }
 
     @PostMapping
-    public ResponseEntity<OrganizationDTO> createUser(@RequestBody @Valid OrganizationDTO organizationDTO) {
-
+    public ResponseEntity<OrganizationDTO> createUser(@RequestBody OrganizationDTO organizationDTO) {
 
         ModelMapper modelMapper = new ModelMapper();
         try {
-            Organization organization = new Organization(organizationDTO.getName(), organizationDTO.getNIT(), organizationDTO.getCity(),
-                    organizationDTO.getDepartament(), organizationDTO.getPhone(), organizationDTO.getCreatedAt(),
-                    organizationDTO.getLastUpdate());
+            Organization organization = new Organization(organizationDTO);
             organizationService.create(organization);
             organizationDTO = modelMapper.map(organization, OrganizationDTO.class);
             return new ResponseEntity<>(organizationDTO, HttpStatus.CREATED);
@@ -69,9 +66,7 @@ public class OrganizationController {
     @PutMapping( "/{id}" )
     public ResponseEntity<OrganizationDTO> update( @RequestBody OrganizationDTO organizationDTO, @PathVariable String id ) {
         ModelMapper modelMapper = new ModelMapper();
-        Organization organization = new Organization(organizationDTO.getName(), organizationDTO.getNIT(), organizationDTO.getCity(),
-                organizationDTO.getDepartament(), organizationDTO.getPhone(), organizationDTO.getCreatedAt(),
-                organizationDTO.getLastUpdate());
+        Organization organization = new Organization(organizationDTO);
         Organization organization2 = organizationService.update(organization,id);
         organizationDTO = modelMapper.map(organization2, OrganizationDTO.class);
         return new ResponseEntity<OrganizationDTO>(organizationDTO,HttpStatus.ACCEPTED) ;
@@ -82,7 +77,6 @@ public class OrganizationController {
     public ResponseEntity<OrganizationDTO> delete( @PathVariable String id ) {
         ModelMapper modelMapper = new ModelMapper();
         Organization organization = organizationService.deleteById(id);
-        organization.setActive(false);
         OrganizationDTO organizationDTO = modelMapper.map(organization, OrganizationDTO.class);
         return new ResponseEntity<OrganizationDTO>(organizationDTO,HttpStatus.ACCEPTED)  ;
     }

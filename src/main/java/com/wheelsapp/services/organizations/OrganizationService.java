@@ -1,7 +1,5 @@
 package com.wheelsapp.services.organizations;
 
-import com.wheelsapp.entities.organizations.City;
-import com.wheelsapp.entities.organizations.Departament;
 import com.wheelsapp.entities.organizations.Organization;
 
 import java.util.List;

@@ -1,5 +1,6 @@
 package com.wheelsapp.entities.organizations;
 
+import com.wheelsapp.dto.organizations.OrganizationDTO;
 import org.springframework.data.annotation.Id;
 
 import java.time.Instant;
@@ -51,6 +52,10 @@ public class Organization {
         this.city = city;
         this.departament = departament;
         this.phone = phone;
+    }
+
+    public Organization(OrganizationDTO organizationDTO){
+        this(organizationDTO.getName(), organizationDTO.getNIT(), organizationDTO.getCity(), organizationDTO.getDepartament(),organizationDTO.getPhone());
     }
     public String getId() {
         return id;

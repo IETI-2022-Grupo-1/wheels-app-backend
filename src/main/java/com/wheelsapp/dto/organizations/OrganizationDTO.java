@@ -22,7 +22,6 @@ public class OrganizationDTO {
 
     private String departament;
 
-    @Indexed(unique = true)
     private String phone;
 
     private Date createdAt;
@@ -122,13 +121,5 @@ public class OrganizationDTO {
     public void setLastUpdate(Date lastUpdate) {
         this.lastUpdate = lastUpdate;
     }
-    
-    // Proximamente para colección departamentos y bla bla bla 
-    /**
-    public List<Departament> getDepartaments() {
-        return Arrays.asList(Departament.values());
-    }
-    public List<City> getCiudades() {
-        return Arrays.asList(City.values());}**/
-
 }
+
