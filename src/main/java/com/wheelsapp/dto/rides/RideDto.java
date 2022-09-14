@@ -10,8 +10,8 @@ public class RideDto {
     private String idDriver;
     private String idCar;
     private Date journeyDate;
-    private Integer houDeparture;
-    private Integer hourArrival;
+    private Date houDeparture;
+    private Date hourArrival;
     private ArrayList<String> route;
     private Integer availableSeats;
     private Integer seatsReserve;
@@ -23,7 +23,7 @@ public class RideDto {
 
     public RideDto(){}
 
-    public RideDto(String idDriver, String idCar, Date journeyDate, Integer houDeparture, Integer hourArrival, ArrayList<String> route, Integer availableSeats, Integer seatsReserve, Boolean isActive, Boolean hasStarted, Integer code, ArrayList<String> listPassenger, ArrayList<String> listStops) {
+    public RideDto(String idDriver, String idCar, Date journeyDate, Date houDeparture, Date hourArrival, ArrayList<String> route, Integer availableSeats, Integer seatsReserve, Boolean isActive, Boolean hasStarted, Integer code, ArrayList<String> listPassenger, ArrayList<String> listStops) {
         this.idDriver = idDriver;
         this.idCar = idCar;
         this.journeyDate = journeyDate;
@@ -63,19 +63,19 @@ public class RideDto {
         this.journeyDate = journeyDate;
     }
 
-    public Integer getHourDeparture() {
+    public Date getHourDeparture() {
         return houDeparture;
     }
 
-    public void setHourDeparture(Integer hourDeparture) {
+    public void setHourDeparture(Date hourDeparture) {
         this.houDeparture = hourDeparture;
     }
 
-    public Integer getHourArrival() {
+    public Date getHourArrival() {
         return hourArrival;
     }
 
-    public void setHourArrival(Integer hourArrival) {
+    public void setHourArrival(Date hourArrival) {
         this.hourArrival = hourArrival;
     }
 
@@ -107,8 +107,8 @@ public class RideDto {
         return isActive;
     }
 
-    public void setIsActive(Boolean active) {
-        isActive = active;
+    public void setIsActive(Boolean isActive) {
+        this.isActive = isActive;
     }
 
     public Boolean getHasStarted() {

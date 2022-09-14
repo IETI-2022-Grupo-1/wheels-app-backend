@@ -1,15 +1,12 @@
 package com.wheelsapp.services.rides;
 
 import com.wheelsapp.entities.rides.Ride;
+import com.wheelsapp.entities.users.User;
 import com.wheelsapp.repositories.rides.RideRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.Date;
+import java.util.*;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 @Service
 public class RideServiceImpl implements RideService {
@@ -34,7 +31,12 @@ public class RideServiceImpl implements RideService {
     public List<Ride> getRideByUser(String userId) {
         List<Ride> rides = new ArrayList<>();
         Date date = Date.from(Instant.now());
-        return null;
+        for (Ride ride: getAllRides()){
+            if (ride.getJourneyDate().after(date) && ride.getIdDriver().equals(userId)) {
+                rides.add(getRideDetail(ride.getId()));
+            }
+        }
+        return rides;
     }
 
     @Override
@@ -45,6 +47,7 @@ public class RideServiceImpl implements RideService {
     @Override
     public Ride updateRide(Ride ride, String id) {
         Ride updateRide = rideRepository.findById(id).get();
+        updateRide.setIdDriver(ride.getIdDriver());
         updateRide.setRoute(ride.getRoute());
         updateRide.setAvailableSeats(ride.getAvailableSeats());
         updateRide.setSeatsReserve(ride.getSeatsReserve());
@@ -57,8 +60,10 @@ public class RideServiceImpl implements RideService {
 
     @Override
     public Ride deleteRide(String id) {
-        Ride ride = rideRepository.findById(id).get();
+        Ride ride = getRideDetail(id);
         ride.setIsActive(false);
+        createRide(ride);
         return ride;
     }
+
 }

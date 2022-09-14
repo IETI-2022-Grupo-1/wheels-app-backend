@@ -1,8 +1,9 @@
 package com.wheelsapp.services.rides;
 
 import com.wheelsapp.entities.rides.Ride;
+import com.wheelsapp.entities.users.User;
 import java.util.List;
-import java.util.Optional;
+
 
 public interface RideService {
     Ride createRide(Ride ride);

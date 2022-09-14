@@ -15,8 +15,8 @@ public class Ride {
     private String idDriver;
     private String idCar;
     private Date journeyDate;
-    private Integer houDeparture;
-    private Integer hourArrival;
+    private Date houDeparture;
+    private Date hourArrival;
     private ArrayList<String> route;
     private Integer availableSeats;
     private Integer seatsReserve;
@@ -31,9 +31,9 @@ public class Ride {
     public Ride(RideDto rideDTO) {
         this.idDriver = rideDTO.getIdDriver();
         this.idCar = rideDTO.getIdCar();
-        this.journeyDate = Date.from(Instant.now());
-        this.houDeparture = Date.from(Instant.now()).getHours();
-        this.hourArrival = Date.from(Instant.now()).getHours();
+        this.journeyDate = rideDTO.getJourneyDate();
+        this.hourArrival = rideDTO.getHourArrival();
+        this.houDeparture = rideDTO.getHourDeparture();
         this.route = rideDTO.getRoute();
         this.availableSeats = rideDTO.getAvailableSeats();
         this.seatsReserve = rideDTO.getSeatsReserve();
@@ -76,19 +76,19 @@ public class Ride {
         this.journeyDate = journeyDate;
     }
 
-    public Integer getHourDeparture() {
+    public Date getHourDeparture() {
         return houDeparture;
     }
 
-    public void setHourDeparture(Integer hourDeparture) {
+    public void setHourDeparture(Date hourDeparture) {
         this.houDeparture = hourDeparture;
     }
 
-    public Integer getHourArrival() {
+    public Date getHourArrival() {
         return hourArrival;
     }
 
-    public void setHourArrival(Integer hourArrival) {
+    public void setHourArrival(Date hourArrival) {
         this.hourArrival = hourArrival;
     }
 
@@ -120,9 +120,7 @@ public class Ride {
         return isActive;
     }
 
-    public void setIsActive(Boolean active) {
-        isActive = active;
-    }
+    public void setIsActive(Boolean isActive) {this.isActive = isActive;}
 
     public Boolean getHasStarted() {
         return hasStarted;
