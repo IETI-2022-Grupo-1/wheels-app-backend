@@ -12,6 +12,7 @@ import java.util.List;
  */
 public class UserDto {
     private String id;
+    private String city;
     @Size(max=40)
     private String name;
     @Size(max=60)
@@ -19,11 +20,10 @@ public class UserDto {
     @Size(max=120)
     private String email;
     private String password;
+    private boolean isActive;
     private String phoneNumber;
-    private String city;
     private String organization;
     private String profilePhoto;
-    private boolean isActive;
     private List<RoleEnum> roles = new ArrayList<>();
 
     public UserDto(String id, String name, String lastName, String email, String password, String phoneNumber, String city, String organization, String profilePhoto) {

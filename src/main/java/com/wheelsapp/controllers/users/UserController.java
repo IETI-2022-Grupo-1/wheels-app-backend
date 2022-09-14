@@ -56,7 +56,6 @@ public class UserController {
     @PostMapping
     public ResponseEntity<UserDto> createUser(@RequestBody @Valid UserDto userDto, BindingResult bindingResult) {
         if(bindingResult.hasErrors()) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-
         ModelMapper modelMapper = new ModelMapper();
         try {
             User user = new User(userDto);
