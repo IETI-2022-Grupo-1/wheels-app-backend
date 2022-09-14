@@ -33,13 +33,14 @@ public class OrganizationServiceMongo implements OrganizationService{
     }
 
     @Override
-    public boolean deleteById(String id) {
-        boolean flag;
+    public Organization deleteById(String id) {
         if (organizationRepository.existsById(id)){
-            flag = true;
-            organizationRepository.deleteById(id);
-        }else{ flag = false;}
-        return flag;
+            Organization organization = findById(id);
+            organization.setActive(false);
+            organizationRepository.save(organization);
+            return  organization;
+        }else{return  null; }
+
     }
 
     @Override

@@ -14,7 +14,7 @@ public interface OrganizationService {
 
     List<Organization> getAll();
 
-    boolean deleteById(String id);
+    Organization deleteById(String id);
 
     Organization update(Organization organization, String userId);
 }

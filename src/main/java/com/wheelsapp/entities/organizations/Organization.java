@@ -25,10 +25,12 @@ public class Organization {
 
     private Date lastUpdate;
 
+    private boolean isActive;
 
     public Organization(){
         this.createdAt = Date.from(Instant.now());
         this.lastUpdate = Date.from(Instant.now());
+        this.isActive = true;
     }
     // Creating Organization with all params
     public Organization(String name, String NIT, String city, String departament, String phone, Date createdAt, Date lastUpdate) {
@@ -115,8 +117,17 @@ public class Organization {
         this.lastUpdate = lastUpdate;
     }
 
+    public boolean isActive() {
+        return isActive;
+    }
 
-/**
+    public void setActive(boolean isActive) {
+        this.isActive = isActive;
+    }
+
+
+
+    /**
     public List<City> getCiudades() {
         return Arrays.asList(City.values());
     }

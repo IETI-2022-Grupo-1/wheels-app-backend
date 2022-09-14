@@ -1,5 +1,7 @@
 package com.wheelsapp.dto.organizations;
 
+import org.springframework.data.mongodb.core.index.Indexed;
+
 import javax.validation.constraints.Size;
 import java.time.Instant;
 import java.util.Date;
@@ -9,20 +11,25 @@ import java.util.Date;
  */
 public class OrganizationDTO {
     @Size(max = 150)
+    @Indexed(unique = true)
     private String name;
 
     @Size(max = 40)
+    @Indexed(unique = true)
     private String NIT;
 
     private String city;
 
     private String departament;
 
+    @Indexed(unique = true)
     private String phone;
 
     private Date createdAt;
 
     private Date lastUpdate;
+
+    private boolean isActive;
 
 
     public OrganizationDTO(String name, String NIT, String city, String departament, String phone, Date createdAt, Date lastUpdate){
@@ -48,6 +55,7 @@ public class OrganizationDTO {
     public OrganizationDTO(){
         this.createdAt = Date.from(Instant.now());
         this.lastUpdate = Date.from(Instant.now());
+        this.isActive = true;
     }
 
     public String getName() {
@@ -78,7 +86,13 @@ public class OrganizationDTO {
         this.departament = departament;
     }
 
+    public boolean isActive() {
+        return isActive;
+    }
 
+    public void setActive(boolean isActive) {
+        this.isActive = isActive;
+    }
 
     public String getDepartament() {
         return departament;

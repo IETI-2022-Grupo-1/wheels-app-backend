@@ -79,8 +79,12 @@ public class OrganizationController {
 
    // @RolesAllowed("ADMIN")
     @DeleteMapping( "/{id}" )
-    public boolean delete( @PathVariable String id ) {
-        return organizationService.deleteById(id);
+    public ResponseEntity<OrganizationDTO> delete( @PathVariable String id ) {
+        ModelMapper modelMapper = new ModelMapper();
+        Organization organization = organizationService.deleteById(id);
+        organization.setActive(false);
+        OrganizationDTO organizationDTO = modelMapper.map(organization, OrganizationDTO.class);
+        return new ResponseEntity<OrganizationDTO>(organizationDTO,HttpStatus.ACCEPTED)  ;
     }
 
 
