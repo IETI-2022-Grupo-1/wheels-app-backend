@@ -85,4 +85,26 @@ public class UserController {
         }
     }
 
+    @PutMapping( "/{id}" )
+    public ResponseEntity<UserDto> update( @RequestBody UserDto user, @PathVariable String id ) {
+        ModelMapper modelMapper = new ModelMapper();
+        try{
+            User userMp = modelMapper.map(user, User.class);
+            UserDto userDto =  modelMapper.map(userService.updateUser(userMp, id), UserDto.class);
+            return new ResponseEntity<>(userDto, HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @DeleteMapping( "/{id}" )
+    public ResponseEntity<Boolean> delete( @PathVariable String id ) {
+        try{
+            userService.deleteUser(id);
+            return new ResponseEntity<>(Boolean.TRUE, HttpStatus.OK);
+        }catch(Exception e){
+            return new ResponseEntity<>(Boolean.FALSE, HttpStatus.NOT_FOUND);
+        }
+    }
+
 }
