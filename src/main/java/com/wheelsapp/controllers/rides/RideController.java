@@ -48,6 +48,31 @@ public class RideController {
         return new ResponseEntity<RideDto>(rideDto, HttpStatus.OK);
     }
 
+    @GetMapping("/user/{user_id}")
+    public ResponseEntity<List<RideDto>> getRidesByUser(@PathVariable String user_id) {
+        try {
+            ModelMapper modelMapper = new ModelMapper();
+            List<Ride> rides = rideService.getRideByUser(user_id);
+            List<RideDto> ridesDTO = new ArrayList<>();
+            for (Ride ride : rides) {
+                ridesDTO.add(modelMapper.map(ride, RideDto.class));
+            }
+            return new ResponseEntity<List<RideDto>>(ridesDTO, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+    }
+
+    @DeleteMapping("/{ride_id}")
+    public ResponseEntity<Boolean> deleteById(@PathVariable String ride_id) {
+        try {
+            rideService.deleteRide(ride_id);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
     @PostMapping
     public ResponseEntity<RideDto> create(@RequestBody RideDto rideDto){
         ModelMapper modelMapper = new ModelMapper();
