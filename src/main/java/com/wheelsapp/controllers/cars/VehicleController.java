@@ -23,16 +23,17 @@ public class VehicleController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createVehicle(@RequestBody Vehicle vehicle){
-        //try {
-            Vehicle vehicle2 = vehicleService.create(vehicle);
+    public ResponseEntity<?> createVehicle(@RequestBody VehicleDto vehicleDto){
+        try {
             ModelMapper modelMapper = new ModelMapper();
+            Vehicle vehicle = modelMapper.map(vehicleDto,Vehicle.class);
+            Vehicle vehicle2 = vehicleService.create(vehicle);
             VehicleDto vehicle1 = modelMapper.map(vehicle2, VehicleDto.class);
             return new ResponseEntity<>(vehicle1, HttpStatus.CREATED);
-        /*}
-         (Exception e){
+        }
+         catch (Exception e){
             return new ResponseEntity<>(HttpStatus.CONFLICT);
-        }**/
+        }
     }
     @GetMapping("/user/{id}")
     public ResponseEntity<?> consultByUser(@PathVariable String id ){
@@ -44,8 +45,6 @@ public class VehicleController {
                 VehicleDto vehicle1 = modelMapper.map(vehicle, VehicleDto.class);
                 vehicleDtos.add(vehicle1);
             }
-
-
             return new ResponseEntity<>(vehicleDtos, HttpStatus.OK);
         }
         catch (Exception e){
@@ -81,11 +80,13 @@ public class VehicleController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> modifyVehicle(@RequestBody Vehicle vehicle,@PathVariable String id ){
+    public ResponseEntity<?> modifyVehicle(@RequestBody VehicleDto vehicleDto,@PathVariable String id ){
         try {
-            Vehicle vehicle2 = vehicleService.updateVehicle(vehicle, id);
             ModelMapper modelMapper = new ModelMapper();
-            VehicleDto vehicle1 = modelMapper.map(vehicle2, VehicleDto.class);
+            Vehicle vehicle = modelMapper.map(vehicleDto,Vehicle.class);
+            Vehicle vehicle2 = vehicleService.updateVehicle(vehicle, id);
+            ModelMapper modelMapper2 = new ModelMapper();
+            VehicleDto vehicle1 = modelMapper2.map(vehicle2, VehicleDto.class);
             return new ResponseEntity<>(vehicle1, HttpStatus.OK);
         }
         catch (Exception e){
@@ -105,8 +106,5 @@ public class VehicleController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-
-
-
 
 }

@@ -5,6 +5,7 @@ import com.wheelsapp.entities.cars.Vehicle;
 import com.wheelsapp.entities.users.User;
 import com.wheelsapp.repositories.cars.VehicleRepository;
 import com.wheelsapp.repositories.users.UserRepository;
+import com.wheelsapp.services.users.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,18 +18,18 @@ import static com.wheelsapp.utils.RoleEnum.DRIVER;
 @Service
 public class VehicleServiceIMPL implements VehicleService {
     private final VehicleRepository vehicleRepository;
-    private final UserRepository userRepository;
-    public VehicleServiceIMPL(@Autowired VehicleRepository vehicleRepository, @Autowired UserRepository userRepository){
+    private final UserService userService;
+    public VehicleServiceIMPL(@Autowired VehicleRepository vehicleRepository, @Autowired UserService userService){
         this.vehicleRepository = vehicleRepository;
-        this.userRepository = userRepository;
+        this.userService = userService;
     }
     @Override
     public Vehicle create(Vehicle vehicle) {
         vehicle.setCreatedAt(new Date());
         vehicle.setLastUpdate(new Date());
-        User user = userRepository.findById(vehicle.getIdUser()).orElse(null);
+        User user = userService.findById(vehicle.getIdUser());
         user.addRole(DRIVER);
-        userRepository.save(user);
+        userService.createUser(user);
         return vehicleRepository.save(vehicle);
     }
     @Override
@@ -66,15 +67,7 @@ public class VehicleServiceIMPL implements VehicleService {
     @Override
     public Vehicle updateVehicle(Vehicle vehicle, String id){
         Vehicle vehicle1 = vehicleRepository.findById(id).orElse(null);
-        vehicle1.setDescription(vehicle.getDescription());
-        vehicle1.setIsActive(vehicle.getIsActive());
-        vehicle1.setModel(vehicle.getModel());
-        vehicle1.setIdUser(vehicle.getIdUser());
-        vehicle1.setSoat(vehicle.getSoat());
-        vehicle1.setPuestos(vehicle.getPuestos());
-        vehicle1.setPropertyCard(vehicle.getPropertyCard());
-        vehicle1.setPhoto(vehicle.getPhoto());
-        vehicle1.setLastUpdate(new Date());
+        vehicle1.update(vehicle);
         vehicleRepository.save(vehicle1);
         return vehicle1;
     }

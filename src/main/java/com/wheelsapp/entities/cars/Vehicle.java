@@ -1,5 +1,6 @@
 package com.wheelsapp.entities.cars;
 
+import com.wheelsapp.dto.cars.VehicleDto;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -8,9 +9,7 @@ import java.util.Date;
 @Document(collection ="cars")
 public class Vehicle {
     private String idUser;
-
     @Id
-
     private String idVehicle;
     private String model;
     private String soat;
@@ -21,13 +20,11 @@ public class Vehicle {
     private boolean isActive;
     private Date createdAt;
     private Date lastUpdate;
-
-
     public Vehicle(){
 
     }
 
-    public Vehicle(String idUser, String idVehicle, String model, String soat, Integer puestos, String propertyCard, String description, String photo, boolean isActive, Date createdAt, Date lastUpdate) {
+    public Vehicle(String idUser, String idVehicle, String model, String soat, Integer puestos, String propertyCard, String description, String photo, boolean isActive) {
         this.idUser = idUser;
         this.idVehicle = idVehicle;
         this.model = model;
@@ -37,8 +34,6 @@ public class Vehicle {
         this.description = description;
         this.photo = photo;
         this.isActive = isActive;
-        this.createdAt = createdAt;
-        this.lastUpdate = lastUpdate;
     }
 
     public String getIdUser() {
@@ -127,5 +122,16 @@ public class Vehicle {
 
     public void setLastUpdate(Date lastUpdate) {
         this.lastUpdate = lastUpdate;
+    }
+    public void update(Vehicle vehicle){
+        this.description=vehicle.getDescription();
+        this.isActive=vehicle.getIsActive();
+        this.model=vehicle.getModel();
+        this.idUser=vehicle.getIdUser();
+        this.soat = vehicle.getSoat() ;
+        this.puestos = vehicle.getPuestos();
+        this.propertyCard=vehicle.getPropertyCard();
+        this.photo=vehicle.getPhoto();
+        this.lastUpdate= new Date();
     }
 }

@@ -2,23 +2,26 @@ package com.wheelsapp.dto.cars;
 
 public class VehicleDto {
     private String idUser;
-
-    private String idVehicle;
     private String model;
+    private String soat;
     private Integer puestos;
+    private String propertyCard;
     private String description;
+    private String photo;
     private boolean isActive;
 
-    public VehicleDto(String idUser, String idVehicle, String model, Integer puestos, String description, boolean isActive) {
+    public VehicleDto(String idUser, String model, String soat, Integer puestos, String propertyCard, String description, String photo, boolean isActive) {
         this.idUser = idUser;
-        this.idVehicle = idVehicle;
         this.model = model;
+        this.soat = soat;
         this.puestos = puestos;
+        this.propertyCard = propertyCard;
         this.description = description;
+        this.photo = photo;
         this.isActive = isActive;
     }
+    public VehicleDto(){
 
-    public VehicleDto() {
     }
 
     public String getIdUser() {
@@ -29,13 +32,6 @@ public class VehicleDto {
         this.idUser = idUser;
     }
 
-    public String getIdVehicle() {
-        return idVehicle;
-    }
-
-    public void setIdVehicle(String idVehicle) {
-        this.idVehicle = idVehicle;
-    }
 
     public String getModel() {
         return model;
@@ -43,6 +39,14 @@ public class VehicleDto {
 
     public void setModel(String model) {
         this.model = model;
+    }
+
+    public String getSoat() {
+        return soat;
+    }
+
+    public void setSoat(String soat) {
+        this.soat = soat;
     }
 
     public Integer getPuestos() {
@@ -53,6 +57,14 @@ public class VehicleDto {
         this.puestos = puestos;
     }
 
+    public String getPropertyCard() {
+        return propertyCard;
+    }
+
+    public void setPropertyCard(String propertyCard) {
+        this.propertyCard = propertyCard;
+    }
+
     public String getDescription() {
         return description;
     }
@@ -61,11 +73,19 @@ public class VehicleDto {
         this.description = description;
     }
 
+    public String getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(String photo) {
+        this.photo = photo;
+    }
+
     public boolean getIsActive() {
         return isActive;
     }
 
-    public void setIsActive(boolean isActive) {
-        this.isActive = isActive;
+    public void setIsActive(boolean active) {
+        isActive = active;
     }
 }
