@@ -10,33 +10,33 @@ public class RideDto {
     private String idDriver;
     private String idCar;
     private Date journeyDate;
-    private Date houDeparture;
-    private Date hourArrival;
+    private Date departureHour;
+    private Date arrivalHour;
     private ArrayList<String> route;
     private Integer availableSeats;
-    private Integer seatsReserve;
+    private Integer seatsReserved;
     private Boolean isActive;
     private Boolean hasStarted;
     private Integer code;
-    private ArrayList<String> listPassenger;
-    private ArrayList<String> listStops;
+    private ArrayList<String> passengerList;
+    private ArrayList<String> stopsList;
 
     public RideDto(){}
 
-    public RideDto(String idDriver, String idCar, Date journeyDate, Date houDeparture, Date hourArrival, ArrayList<String> route, Integer availableSeats, Integer seatsReserve, Boolean isActive, Boolean hasStarted, Integer code, ArrayList<String> listPassenger, ArrayList<String> listStops) {
+    public RideDto(String idDriver, String idCar, Date journeyDate, Date departureHour, Date arrivalHour, ArrayList<String> route, Integer availableSeats, Integer seatsReserved, Boolean isActive, Boolean hasStarted, Integer code, ArrayList<String> passengerList, ArrayList<String> stopsList) {
         this.idDriver = idDriver;
         this.idCar = idCar;
         this.journeyDate = journeyDate;
-        this.houDeparture = houDeparture;
-        this.hourArrival = hourArrival;
+        this.departureHour = departureHour;
+        this.arrivalHour = arrivalHour;
         this.route = route;
         this.availableSeats = availableSeats;
-        this.seatsReserve = seatsReserve;
+        this.seatsReserved = seatsReserved;
         this.isActive = isActive;
         this.hasStarted = hasStarted;
         this.code = code;
-        this.listPassenger = listPassenger;
-        this.listStops = listStops;
+        this.passengerList = passengerList;
+        this.stopsList = stopsList;
     }
 
     public String getIdDriver() {
@@ -63,20 +63,20 @@ public class RideDto {
         this.journeyDate = journeyDate;
     }
 
-    public Date getHourDeparture() {
-        return houDeparture;
+    public Date getDepartureHour() {
+        return departureHour;
     }
 
-    public void setHourDeparture(Date hourDeparture) {
-        this.houDeparture = hourDeparture;
+    public void setDepartureHour(Date departureHour) {
+        this.departureHour = departureHour;
     }
 
-    public Date getHourArrival() {
-        return hourArrival;
+    public Date getArrivalHour() {
+        return arrivalHour;
     }
 
-    public void setHourArrival(Date hourArrival) {
-        this.hourArrival = hourArrival;
+    public void setArrivalHour(Date arrivalHour) {
+        this.arrivalHour = arrivalHour;
     }
 
     public ArrayList<String> getRoute() {
@@ -95,12 +95,12 @@ public class RideDto {
         this.availableSeats = availableSeats;
     }
 
-    public Integer getSeatsReserve() {
-        return seatsReserve;
+    public Integer getSeatsReserved() {
+        return seatsReserved;
     }
 
-    public void setSeatsReserve(Integer seatsReserve) {
-        this.seatsReserve = seatsReserve;
+    public void setSeatsReserved(Integer seatsReserved) {
+        this.seatsReserved = seatsReserved;
     }
 
     public Boolean getIsActive() {
@@ -127,19 +127,19 @@ public class RideDto {
         this.code = code;
     }
 
-    public ArrayList<String> getListPassenger() {
-        return listPassenger;
+    public ArrayList<String> getPassengerList() {
+        return passengerList;
     }
 
-    public void setListPassenger(ArrayList<String> listPassenger) {
-        this.listPassenger = listPassenger;
+    public void setPassengerList(ArrayList<String> passengerList) {
+        this.passengerList = passengerList;
     }
 
-    public ArrayList<String> getListStops() {
-        return listStops;
+    public ArrayList<String> getStopsList() {
+        return stopsList;
     }
 
-    public void setListStops(ArrayList<String> listStops) {
-        this.listStops = listStops;
+    public void setStopsList(ArrayList<String> stopsList) {
+        this.stopsList = stopsList;
     }
 }

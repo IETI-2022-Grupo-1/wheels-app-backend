@@ -46,16 +46,9 @@ public class RideServiceImpl implements RideService {
 
     @Override
     public Ride updateRide(Ride ride, String id) {
-        Ride updateRide = rideRepository.findById(id).get();
-        updateRide.setIdDriver(ride.getIdDriver());
-        updateRide.setRoute(ride.getRoute());
-        updateRide.setAvailableSeats(ride.getAvailableSeats());
-        updateRide.setSeatsReserve(ride.getSeatsReserve());
-        updateRide.setIsActive(ride.getIsActive());
-        updateRide.setHasStarted(ride.getHasStarted());
-        updateRide.setListPassenger(ride.getListPassenger());
-        updateRide.setListStops(ride.getListStops());
-        return rideRepository.save(updateRide);
+        Ride rideToUpdate = rideRepository.findById(id).get();
+        rideToUpdate.updateRide(ride);
+        return rideRepository.save(rideToUpdate);
     }
 
     @Override

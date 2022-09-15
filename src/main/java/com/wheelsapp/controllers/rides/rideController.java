@@ -50,7 +50,7 @@ public class rideController {
         }
     }
 
-    @GetMapping("/user/{user_id}")
+    @GetMapping("/user-{user_id}")
     public ResponseEntity<List<RideDto>> getRidesByUser(@PathVariable String user_id) {
         try {
             ModelMapper modelMapper = new ModelMapper();
