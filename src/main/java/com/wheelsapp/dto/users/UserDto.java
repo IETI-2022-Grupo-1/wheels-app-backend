@@ -11,6 +11,8 @@ import java.util.List;
  * @author Laura Garcia
  */
 public class UserDto {
+    private String id;
+    private String city;
     @Size(max=40)
     private String name;
     @Size(max=60)
@@ -18,14 +20,14 @@ public class UserDto {
     @Size(max=120)
     private String email;
     private String password;
+    private boolean isActive;
     private String phoneNumber;
-    private String city;
     private String organization;
     private String profilePhoto;
-    private boolean isActive;
     private List<RoleEnum> roles = new ArrayList<>();
 
-    public UserDto(String name, String lastName, String email, String password, String phoneNumber, String city, String organization, String profilePhoto) {
+    public UserDto(String id, String name, String lastName, String email, String password, String phoneNumber, String city, String organization, String profilePhoto) {
+        this.id = id;
         this.name = name;
         this.lastName = lastName;
         this.email = email;
@@ -37,6 +39,10 @@ public class UserDto {
     }
 
     public UserDto(){};
+
+    public String getId() {return id;}
+
+    public void setId(String id) { this.id = id;}
 
     public String getName() {
         return name;
