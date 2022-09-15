@@ -44,6 +44,7 @@ public class UserServiceMongo implements UserService {
     public User deleteUser(String userId) {
         User user = findById(userId);
         user.setActive(false);
+        userRepository.save(user);
         return user;
     }
 

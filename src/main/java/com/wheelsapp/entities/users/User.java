@@ -24,19 +24,20 @@ import java.util.List;
 public class User {
     @Id
     private String id;
-    private String name;//max 40
-    private String lastName; //max 60
+    private String name;
+    private String city;
     @Indexed(unique = true)
     private String email;
+    private Date createdAt;
+    private String lastName;
+    private Date lastUpdate;
     private String password;
+    private boolean isActive;
     private String phoneNumber;
-    private String city;
     private String organization;
     private String profilePhoto;
     private List<RoleEnum> roles = new ArrayList<>();
-    private boolean isActive;
-    private Date createdAt;
-    private Date lastUpdate;
+
 
     public User(){
         this.createdAt = Date.from(Instant.now());
@@ -48,7 +49,6 @@ public class User {
     //User Passenger
     public User(String name, String lastName, String email, String password, String phoneNumber, String city, String organization, String profilePhoto) {
         this();
-        System.out.println("CREATE USER");
         this.city = city;
         this.name = name;
         this.email = email;
@@ -59,7 +59,7 @@ public class User {
         hashAttributes(phoneNumber, password);
     }
 
-//    //User Admin
+    //User Admin
     public User(String name, String lastName, String email, String password, String phoneNumber){
         this();
         this.name = name;
@@ -89,10 +89,10 @@ public class User {
     }
 
     public void updateUser(User user){
-        name = user.getName();
-        lastName = user.getLastName();
-        email = user.getEmail();
-        hashAttributes(user.phoneNumber, user.password);
+        city = user.getCity();
+        profilePhoto = user.getProfilePhoto();
+        lastUpdate = Date.from(Instant.now());
+        hashAttributes(user.getPhoneNumber(), user.getPassword());
     }
 
     public String getId() {
