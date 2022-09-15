@@ -1,4 +1,4 @@
-package com.wheelsapp.dto.cars;
+package com.wheelsapp.controllers.rides;
 
 /**
  * @author Laura Garcia

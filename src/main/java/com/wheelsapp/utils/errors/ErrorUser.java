@@ -19,4 +19,3 @@ public enum ErrorUser {
         return label;
     }
 }
-
