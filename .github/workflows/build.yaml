@@ -14,12 +14,13 @@ on: [push]
 env:
   PORT: 8081
   MONGODB_URI: mongodb+srv://root:root@wheelsapp.nd0amgp.mongodb.net/wheelsApp?retryWrites=true&w=majority
-
+  SECRET_KEY: secret_key
 jobs:
   build:
     strategy:
       matrix:
-        os: [ ubuntu-latest, windows-latest, macos-latest ]
+        os: [ ubuntu-latest ]
+        # os: [ ubuntu-latest, windows-latest, macos-latest ]
     name: ${{ matrix.os }} build
     runs-on: ${{ matrix.os }}
 

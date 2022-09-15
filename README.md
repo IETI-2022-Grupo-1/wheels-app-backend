@@ -1,4 +1,8 @@
 # Dev 
+
+# Postman Endpoints
+* https://app.getpostman.com/join-team?invite_code=476feaf0ccaf78dda41b4af3c8703a89&target_code=329761d595bd77ae899869c5923bb057
+
 ## Consideraciones
 * Una vez termine sus desarrollos suba su rama a github siguiendo las convenciones acordadas (la rama debe tener su nombre).
 * Cuando su rama se encuentre en el repositorio remoto, abra un _pull request_ a dev.
