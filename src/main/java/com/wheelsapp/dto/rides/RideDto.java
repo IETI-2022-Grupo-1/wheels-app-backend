@@ -7,6 +7,7 @@ import java.util.Date;
 * @author Julian Peña
 */
 public class RideDto {
+    private String id;
     private String idDriver;
     private String idCar;
     private Date journeyDate;

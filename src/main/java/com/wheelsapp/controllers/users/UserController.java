@@ -56,7 +56,6 @@ public class UserController {
     @PostMapping
     public ResponseEntity<UserDto> createUser(@RequestBody @Valid UserDto userDto, BindingResult bindingResult) {
         if(bindingResult.hasErrors()) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-
         ModelMapper modelMapper = new ModelMapper();
         try {
             User user = new User(userDto);
@@ -82,6 +81,28 @@ public class UserController {
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return new ResponseEntity<>(HttpStatus.CONFLICT);
+        }
+    }
+
+    @PutMapping( "/{id}" )
+    public ResponseEntity<UserDto> update( @RequestBody UserDto user, @PathVariable String id ) {
+        ModelMapper modelMapper = new ModelMapper();
+        try{
+            User userMp = modelMapper.map(user, User.class);
+            UserDto userDto =  modelMapper.map(userService.updateUser(userMp, id), UserDto.class);
+            return new ResponseEntity<>(userDto, HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @DeleteMapping( "/{id}" )
+    public ResponseEntity<Boolean> delete( @PathVariable String id ) {
+        try{
+            userService.deleteUser(id);
+            return new ResponseEntity<>(Boolean.TRUE, HttpStatus.OK);
+        }catch(Exception e){
+            return new ResponseEntity<>(Boolean.FALSE, HttpStatus.NOT_FOUND);
         }
     }
 
