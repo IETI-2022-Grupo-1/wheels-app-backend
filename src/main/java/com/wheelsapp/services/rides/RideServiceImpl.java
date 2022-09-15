@@ -74,7 +74,7 @@ public class RideServiceImpl implements RideService {
         List<Ride> rides = new ArrayList<>();
         Date date = convertStringDate(arrival_date);
         for(Ride ride: getAllRides()) {
-            if (ride.getHourArrival().getYear()==date.getYear() && ride.getHourArrival().getMonth()==date.getMonth() && ride.getHourArrival().getDate()==date.getDate() && ride.getHourArrival().getHours()==date.getHours()) {
+            if (ride.getArrivalHour().getYear()==date.getYear() && ride.getArrivalHour().getMonth()==date.getMonth() && ride.getArrivalHour().getDate()==date.getDate() && ride.getArrivalHour().getHours()==date.getHours()) {
                 rides.add(ride);
             }
         }
@@ -86,7 +86,7 @@ public class RideServiceImpl implements RideService {
         List<Ride> rides = new ArrayList<>();
         Date date = convertStringDate(departure_date);
         for(Ride ride: getAllRides()) {
-            if (ride.getHourDeparture().getYear()==date.getYear() && ride.getHourDeparture().getMonth()==date.getMonth() && ride.getHourDeparture().getDate()==date.getDate() && ride.getHourDeparture().getHours()==date.getHours()) {
+            if (ride.getDepartureHour().getYear()==date.getYear() && ride.getDepartureHour().getMonth()==date.getMonth() && ride.getDepartureHour().getDate()==date.getDate() && ride.getDepartureHour().getHours()==date.getHours()) {
                 rides.add(ride);
             }
         }
@@ -121,8 +121,8 @@ public class RideServiceImpl implements RideService {
     @Override
     public Ride postReserveJourney(JourneyDto journeyDto) {
         Ride ride = rideRepository.findById(JourneyDto.getIdRide()).get();
-        ArrayList<String> passenger = ride.getListPassenger();
-        ArrayList<String> stops = ride.getListStops();
+        ArrayList<String> passenger = ride.getPassengerList();
+        ArrayList<String> stops = ride.getStopsList();
         if (journeyDto.getSeats() <= ride.getAvailableSeats()) {
             if(journeyDto.getSeats() != journeyDto.getListSeatsStop().size()) {
                 return ride;
@@ -138,9 +138,9 @@ public class RideServiceImpl implements RideService {
     @Override
     public Ride deleteReserve(String idRide, String idUser) {
         Ride ride = rideRepository.findById(idRide).get();
-        int numPassenger = ride.getListPassenger().size();
-        ArrayList<String> lisPassenger = ride.getListPassenger();
-        ArrayList<String> lisStops = ride.getListStops();
+        int numPassenger = ride.getPassengerList().size();
+        ArrayList<String> lisPassenger = ride.getPassengerList();
+        ArrayList<String> lisStops = ride.getStopsList();
         ArrayList<Integer> con = new ArrayList<>();
         for (int i = 0; i<numPassenger; i++ ) {
             if (lisPassenger.get(i).equals(idUser)) {
@@ -158,7 +158,7 @@ public class RideServiceImpl implements RideService {
     @Override
     public Ride putReserveJourney(JourneyDto journeyDto) {
         Ride ride = rideRepository.findById(JourneyDto.getIdRide()).get();
-        ArrayList<String> lisPassenger = ride.getListPassenger();
+        ArrayList<String> lisPassenger = ride.getPassengerList();
         int con = 0;
         for (String idPassenger: lisPassenger) {
             if(idPassenger.equals(journeyDto.getIdUser())) {
@@ -186,8 +186,8 @@ public class RideServiceImpl implements RideService {
     }
 
     public Ride setRice(Ride ride, ArrayList<String> lisPassenger, ArrayList<String> lisStops, Integer numPassenger) {
-        ride.setListPassenger(lisPassenger);
-        ride.setListStops(lisStops);
+        ride.setPassengerList(lisPassenger);
+        ride.setStopsList(lisStops);
         ride.setAvailableSeats(numPassenger);
         rideRepository.save(ride);
         return ride;

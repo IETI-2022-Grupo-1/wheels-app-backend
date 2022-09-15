@@ -165,4 +165,12 @@ public class Ride {
     public void setStopsList(ArrayList<String> stopsList) {
         this.stopsList = stopsList;
     }
+
+    public void addListStop(String s) {
+        this.stopsList.add(s);
+    }
+
+    public void addListPassenger(String s) {
+        this.passengerList.add(s);
+    }
 }
