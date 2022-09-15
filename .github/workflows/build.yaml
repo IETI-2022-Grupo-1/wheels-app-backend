@@ -14,7 +14,7 @@ on: [push]
 env:
   PORT: 8081
   MONGODB_URI: mongodb+srv://root:root@wheelsapp.nd0amgp.mongodb.net/wheelsApp?retryWrites=true&w=majority
-
+  SECRET_KEY: secret_key
 jobs:
   build:
     strategy:

@@ -31,6 +31,11 @@ public class UserServiceMongo implements UserService {
     }
 
     @Override
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email).get();
+    }
+
+    @Override
     public List<User> getAll() {
         return userRepository.findAll();
     }
