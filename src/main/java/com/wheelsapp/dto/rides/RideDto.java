@@ -2,6 +2,7 @@ package com.wheelsapp.dto.rides;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 
 /*
 * @author Julian Peña
@@ -20,11 +21,12 @@ public class RideDto {
     private Boolean hasStarted;
     private Integer code;
     private ArrayList<String> passengerList;
-    private ArrayList<String> stopsList;
+    private HashMap<String, String> stopsList;
 
     public RideDto(){}
 
-    public RideDto(String idDriver, String idCar, Date journeyDate, Date departureHour, Date arrivalHour, ArrayList<String> route, Integer availableSeats, Integer seatsReserved, Boolean isActive, Boolean hasStarted, Integer code, ArrayList<String> passengerList, ArrayList<String> stopsList) {
+    public RideDto(String id, String idDriver, String idCar, Date journeyDate, Date departureHour, Date arrivalHour, ArrayList<String> route, Integer availableSeats, Integer seatsReserved, Boolean isActive, Boolean hasStarted, Integer code, ArrayList<String> passengerList, HashMap<String, String> stopsList) {
+        this.id = id;
         this.idDriver = idDriver;
         this.idCar = idCar;
         this.journeyDate = journeyDate;
@@ -38,6 +40,14 @@ public class RideDto {
         this.code = code;
         this.passengerList = passengerList;
         this.stopsList = stopsList;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public Boolean getActive() {
+        return isActive;
     }
 
     public String getIdDriver() {
@@ -136,11 +146,11 @@ public class RideDto {
         this.passengerList = passengerList;
     }
 
-    public ArrayList<String> getStopsList() {
+    public HashMap<String, String> getStopsList() {
         return stopsList;
     }
 
-    public void setStopsList(ArrayList<String> stopsList) {
+    public void setStopsList(HashMap<String, String> stopsList) {
         this.stopsList = stopsList;
     }
 }

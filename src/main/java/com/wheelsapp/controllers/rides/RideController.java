@@ -1,6 +1,5 @@
 package com.wheelsapp.controllers.rides;
 
-import com.wheelsapp.dto.rides.JourneyDto;
 import com.wheelsapp.dto.rides.RideDto;
 import com.wheelsapp.entities.rides.Ride;
 import com.wheelsapp.services.rides.RideService;
@@ -149,11 +148,11 @@ public class RideController {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
     }
-    @PostMapping("journey/reserve")
-    public ResponseEntity<RideDto> postReserveJourney(@RequestBody JourneyDto journeyDto){
+    @PostMapping("/reserve")
+    public ResponseEntity<RideDto> postReserve(@RequestBody RideDto rideDto) throws Exception {
         try {
             ModelMapper modelMapper = new ModelMapper();
-            Ride ride = rideService.postReserveJourney(journeyDto);
+            Ride ride = rideService.createReserve(rideDto);
             RideDto rideDTO = modelMapper.map(ride, RideDto.class);
             return new ResponseEntity<>(rideDTO, HttpStatus.CREATED);
         } catch (Exception e) {
@@ -161,8 +160,8 @@ public class RideController {
         }
     }
 
-    @DeleteMapping("journey/{idRide}/{idUser}")
-    public ResponseEntity<RideDto> deleteReserve(@PathVariable String idRide, @PathVariable String idUser) {
+    @DeleteMapping("/reserve/{idRide}/{idUser}")
+    public ResponseEntity<RideDto> deleteReserve(@PathVariable String idRide, @PathVariable String idUser) throws Exception {
         try{
             ModelMapper modelMapper = new ModelMapper();
             Ride ride = rideService.deleteReserve(idRide, idUser);
@@ -173,11 +172,11 @@ public class RideController {
         }
     }
 
-    @PutMapping("/journey/reserve")
-    public ResponseEntity<RideDto> update(@RequestBody JourneyDto journeyDto){
+    @PutMapping("/reserve")
+    public ResponseEntity<RideDto> updateReserve(@RequestBody RideDto rideDto) throws Exception {
         try {
             ModelMapper modelMapper = new ModelMapper();
-            Ride ride = rideService.putReserveJourney(journeyDto);
+            Ride ride = rideService.putReserve(rideDto);
             RideDto rideDTO = modelMapper.map(ride, RideDto.class);
             return new ResponseEntity<>(rideDTO, HttpStatus.CREATED);
         } catch (Exception e) {

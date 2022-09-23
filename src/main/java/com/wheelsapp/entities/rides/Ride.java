@@ -5,6 +5,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import com.wheelsapp.dto.rides.RideDto;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 
 @Document(collection = "Rides")
 public class Ride {
@@ -22,7 +23,7 @@ public class Ride {
     private Boolean hasStarted;
     private Integer code;
     private ArrayList<String> passengerList;
-    private ArrayList<String> stopsList;
+    private HashMap<String, String> stopsList;
 
     public Ride(){}
 
@@ -43,6 +44,7 @@ public class Ride {
     }
 
     public void updateRide(Ride ride){
+        id = ride.getId();
         idDriver = ride.getIdDriver();
         route = ride.getRoute();
         journeyDate = ride.getJourneyDate();
@@ -158,16 +160,12 @@ public class Ride {
         this.passengerList = passengerList;
     }
 
-    public ArrayList<String> getStopsList() {
+    public HashMap<String, String> getStopsList() {
         return stopsList;
     }
 
-    public void setStopsList(ArrayList<String> stopsList) {
+    public void setStopsList(HashMap<String, String> stopsList) {
         this.stopsList = stopsList;
-    }
-
-    public void addListStop(String s) {
-        this.stopsList.add(s);
     }
 
     public void addListPassenger(String s) {

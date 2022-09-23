@@ -1,6 +1,6 @@
 package com.wheelsapp.services.rides;
 
-import com.wheelsapp.dto.rides.JourneyDto;
+import com.wheelsapp.dto.rides.RideDto;
 import com.wheelsapp.entities.rides.Ride;
 import com.wheelsapp.repositories.rides.RideRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,10 +9,7 @@ import org.springframework.stereotype.Service;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author Juan Cadavid
@@ -74,8 +71,10 @@ public class RideServiceImpl implements RideService {
         List<Ride> rides = new ArrayList<>();
         Date date = convertStringDate(arrival_date);
         for(Ride ride: getAllRides()) {
-            if (ride.getArrivalHour().getYear()==date.getYear() && ride.getArrivalHour().getMonth()==date.getMonth() && ride.getArrivalHour().getDate()==date.getDate() && ride.getArrivalHour().getHours()==date.getHours()) {
-                rides.add(ride);
+            if (ride.getIsActive()) {
+                if (ride.getArrivalHour().getYear() == date.getYear() && ride.getArrivalHour().getMonth() == date.getMonth() && ride.getArrivalHour().getDate() == date.getDate() && ride.getArrivalHour().getHours() == date.getHours()) {
+                    rides.add(ride);
+                }
             }
         }
         return rides;
@@ -86,8 +85,10 @@ public class RideServiceImpl implements RideService {
         List<Ride> rides = new ArrayList<>();
         Date date = convertStringDate(departure_date);
         for(Ride ride: getAllRides()) {
-            if (ride.getDepartureHour().getYear()==date.getYear() && ride.getDepartureHour().getMonth()==date.getMonth() && ride.getDepartureHour().getDate()==date.getDate() && ride.getDepartureHour().getHours()==date.getHours()) {
-                rides.add(ride);
+            if (ride.getIsActive()) {
+                if (ride.getDepartureHour().getYear() == date.getYear() && ride.getDepartureHour().getMonth() == date.getMonth() && ride.getDepartureHour().getDate() == date.getDate() && ride.getDepartureHour().getHours() == date.getHours()) {
+                    rides.add(ride);
+                }
             }
         }
         return rides;
@@ -97,8 +98,10 @@ public class RideServiceImpl implements RideService {
     public List<Ride> getAllSeatsDate(Integer seats_available) {
         List<Ride> rides = new ArrayList<>();
         for(Ride ride: getAllRides()) {
-            if (seats_available <= ride.getAvailableSeats()) {
-                rides.add(ride);
+            if (ride.getIsActive()){
+                if (seats_available <= ride.getAvailableSeats()) {
+                    rides.add(ride);
+                }
             }
         }
         return rides;
@@ -110,8 +113,10 @@ public class RideServiceImpl implements RideService {
         List<Ride> rides = new ArrayList<>();
         for(Ride ride: getAllRides()) {
             for(String keyw: ride.getRoute()) {
-                if(keyword.equals(keyw)) {
-                    rides.add(ride);
+                if (ride.getIsActive()) {
+                    if (keyword.equals(keyw)) {
+                        rides.add(ride);
+                    }
                 }
             }
         }
@@ -119,60 +124,56 @@ public class RideServiceImpl implements RideService {
     }
 
     @Override
-    public Ride postReserveJourney(JourneyDto journeyDto) {
-        Ride ride = rideRepository.findById(JourneyDto.getIdRide()).get();
-        ArrayList<String> passenger = ride.getPassengerList();
-        ArrayList<String> stops = ride.getStopsList();
-        if (journeyDto.getSeats() <= ride.getAvailableSeats()) {
-            if(journeyDto.getSeats() != journeyDto.getListSeatsStop().size()) {
-                return ride;
-            }
-            for (int i = 0; i<journeyDto.getSeats(); i++) {
-                passenger.add(journeyDto.getIdUser());
-            }
-            stops.addAll(journeyDto.getListSeatsStop());
+    public Ride createReserve(RideDto rideDto) throws Exception {
+        Ride ride = rideRepository.findById(rideDto.getId()).get();
+
+        if(rideDto.getStopsList().size() > ride.getAvailableSeats()) {
+            throw new Exception("The required size is insufficient");
         }
-        return setRice(ride, passenger, stops, ride.getAvailableSeats()-journeyDto.getSeats());
+        for (String i: rideDto.getStopsList().keySet()) {
+            ride.getPassengerList().add(i.split("-")[0]);
+        }
+        ride.getStopsList().putAll(rideDto.getStopsList());
+        ride.setAvailableSeats(ride.getAvailableSeats()-rideDto.getStopsList().size());
+        ride.setSeatsReserved(ride.getSeatsReserved()+rideDto.getStopsList().size());
+        rideRepository.save(ride);
+        return ride;
     }
 
     @Override
-    public Ride deleteReserve(String idRide, String idUser) {
+    public Ride deleteReserve(String idRide, String idUser) throws Exception {
         Ride ride = rideRepository.findById(idRide).get();
-        int numPassenger = ride.getPassengerList().size();
-        ArrayList<String> lisPassenger = ride.getPassengerList();
-        ArrayList<String> lisStops = ride.getStopsList();
-        ArrayList<Integer> con = new ArrayList<>();
-        for (int i = 0; i<numPassenger; i++ ) {
-            if (lisPassenger.get(i).equals(idUser)) {
-                con.add(i);
-            }
-        }
-        numPassenger=+ride.getAvailableSeats()+numPassenger;
-        for (int i=con.size()-1;i>=0;i--) {
-            lisPassenger.remove(i);
-            lisStops.remove(i);
-        }
-        return setRice(ride, lisPassenger, lisStops, numPassenger);
+        ArrayList<String> passengersRemove = removePassenger(new ArrayList<>(ride.getPassengerList()), ride, idUser);
+        HashMap<String, String> stopsRemove = removeStops(new HashMap<>(ride.getStopsList()), ride, idUser);
+        int con = ride.getPassengerList().size()-passengersRemove.size();
+        ride.setAvailableSeats(ride.getAvailableSeats() + con);
+        ride.setSeatsReserved(ride.getSeatsReserved() - con);
+        ride.setPassengerList(passengersRemove);
+        ride.setStopsList(stopsRemove);
+        rideRepository.save(ride);
+        return ride;
     }
 
     @Override
-    public Ride putReserveJourney(JourneyDto journeyDto) {
-        Ride ride = rideRepository.findById(JourneyDto.getIdRide()).get();
-        ArrayList<String> lisPassenger = ride.getPassengerList();
-        int con = 0;
-        for (String idPassenger: lisPassenger) {
-            if(idPassenger.equals(journeyDto.getIdUser())) {
-                con++;
-            }
+    public Ride putReserve(RideDto rideDto) throws Exception {
+        Ride ride = rideRepository.findById(rideDto.getId()).get();
+        ArrayList<String> keys = new ArrayList<>(ride.getStopsList().keySet());
+        ArrayList<String> passengers = removePassenger(new ArrayList<>(ride.getPassengerList()), ride, keys.get(0).split("-")[0]);
+        HashMap<String, String> stops = removeStops(new HashMap<>(ride.getStopsList()), ride, keys.get(0).split("-")[0]);
+        int availableSeats = ride.getAvailableSeats() + ride.getPassengerList().size()-passengers.size();
+        int seatsReserved = ride.getSeatsReserved() - ride.getPassengerList().size()-passengers.size();
+        System.out.println(stops.size()+" "+availableSeats);
+        if(rideDto.getStopsList().size() > availableSeats) {
+            throw new Exception("The required size is insufficient");
         }
-        if(journeyDto.getSeats()-con > ride.getAvailableSeats()) {
-            return ride;
+        for (String i: rideDto.getStopsList().keySet()) {
+            passengers.add(i.split("-")[0]);
         }
-        for (int i = journeyDto.getSeats(); i>con; i--) {
-            ride.addListPassenger(journeyDto.getIdUser());
-            ride.addListStop(journeyDto.getListSeatsStop().get(i-1));
-            ride.setAvailableSeats(ride.getAvailableSeats()-1);
-        }
+        stops.putAll(rideDto.getStopsList());
+        ride.setPassengerList(passengers);
+        ride.setStopsList(stops);
+        ride.setAvailableSeats(availableSeats-stops.size());
+        ride.setSeatsReserved(seatsReserved+stops.size());
         rideRepository.save(ride);
         return ride;
     }
@@ -185,11 +186,25 @@ public class RideServiceImpl implements RideService {
         return cal.getTime();
     }
 
-    public Ride setRice(Ride ride, ArrayList<String> lisPassenger, ArrayList<String> lisStops, Integer numPassenger) {
-        ride.setPassengerList(lisPassenger);
-        ride.setStopsList(lisStops);
-        ride.setAvailableSeats(numPassenger);
-        rideRepository.save(ride);
-        return ride;
+    private ArrayList<String> removePassenger (ArrayList<String> passengersRemove, Ride ride,String idUser) throws Exception {
+        for (String i: ride.getPassengerList()) {
+            if (i.equals(idUser)) {
+                if(!passengersRemove.remove(idUser)) {
+                    throw new Exception("The user was impossible to delete");
+                }
+            }
+        }
+        return passengersRemove;
+    }
+
+    private HashMap<String, String> removeStops (HashMap<String, String> stopsRemove, Ride ride,String idUser) throws Exception {
+        for (String key: ride.getStopsList().keySet()) {
+            if (key.split("-")[0].equals(idUser)) {
+                if (!stopsRemove.remove(key, ride.getStopsList().get(key))) {
+                    throw new Exception("The user was impossible to delete");
+                }
+            }
+        }
+        return stopsRemove;
     }
 }
