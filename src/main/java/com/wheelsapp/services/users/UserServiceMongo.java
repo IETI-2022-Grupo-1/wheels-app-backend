@@ -1,12 +1,20 @@
 package com.wheelsapp.services.users;
 
-
-import com.wheelsapp.entities.users.User;
-import com.wheelsapp.repositories.users.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import com.wheelsapp.utils.RoleEnum;
+import org.modelmapper.ModelMapper;
+import com.wheelsapp.dto.users.UserDto;
+import com.wheelsapp.entities.users.User;
+import com.wheelsapp.dto.users.UserAdminDto;
+import com.wheelsapp.exception.ExceptionType;
+import com.wheelsapp.exception.ExceptionGenerator;
+import com.wheelsapp.repositories.users.UserRepository;
+
+import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * @author Laura Garcia
@@ -16,43 +24,80 @@ public class UserServiceMongo implements UserService {
 
     private final UserRepository userRepository;
 
+    private ModelMapper modelMapper;
+
     public UserServiceMongo(@Autowired UserRepository userRepository ){
         this.userRepository = userRepository;
     }
+
     @Override
-    public User createUser(User user) {
+    public UserDto createUser(UserDto userDto) {
+        User user = new User(userDto);
         userRepository.save(user);
-        return user;
+        return modelMapper.map(user, UserDto.class);
+    }
+
+    @Override
+    public UserAdminDto createAdmin(UserAdminDto userAdminDto) {
+        User user = new User(userAdminDto);
+        userRepository.save(user);
+        return modelMapper.map(user, UserAdminDto.class);
+    }
+
+    @Override
+    public UserDto createDriver(String userId) {
+        User user = findById(userId);
+        user.addRole(RoleEnum.DRIVER);
+        userRepository.save(user);
+        return modelMapper.map(user, UserDto.class);
     }
 
     @Override
     public User findById(String userId) {
-        return userRepository.findById(userId).get();
+        Optional<User>  possibleUser = userRepository.findById(userId);
+        if(possibleUser.isPresent()){
+            return possibleUser.get();
+        }else
+            throw ExceptionGenerator.getException(ExceptionType.DUPLICATE_ENTITY, "User not found");
+    }
+
+    @Override
+    public UserDto findUserDtoById(String userId) {
+       return modelMapper.map(findById(userId), UserDto.class);
     }
 
     @Override
     public User findByEmail(String email) {
-        return userRepository.findByEmail(email).get();
+        Optional<User>  possibleUser = userRepository.findByEmail(email);
+        if(possibleUser.isPresent()){
+            return possibleUser.get();
+        }else
+            throw ExceptionGenerator.getException(ExceptionType.DUPLICATE_ENTITY, "Email not found");
     }
 
     @Override
-    public List<User> getAll() {
-        return userRepository.findAll();
+    public List<UserDto> getAll() {
+        List<User> users = userRepository.findAll();
+        return users.stream()
+                .map(user -> {
+                    return modelMapper.map(user, UserDto.class);
+                }).collect(Collectors.toList());
     }
 
     @Override
-    public User deleteUser(String userId) {
+    public UserDto deleteUser(String userId) {
         User user = findById(userId);
         user.setActive(false);
         userRepository.save(user);
-        return user;
+        return modelMapper.map(user, UserDto.class);
     }
 
     @Override
-    public User updateUser(User user, String userId) {
+    public UserDto updateUser(UserDto userDto, String userId) {
         User userToUpdate = findById(userId);
-        userToUpdate.updateUser(user);
-        return userRepository.save(userToUpdate);
+        userToUpdate.updateUser(userDto);
+        userRepository.save(userToUpdate);
+        return modelMapper.map(userToUpdate, UserDto.class);
     }
 
 }

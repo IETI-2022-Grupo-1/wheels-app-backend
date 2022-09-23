@@ -1,23 +1,30 @@
 package com.wheelsapp.services.users;
 
-import com.wheelsapp.entities.users.User;
-
 import java.util.List;
+import com.wheelsapp.dto.users.UserDto;
+import com.wheelsapp.entities.users.User;
+import com.wheelsapp.dto.users.UserAdminDto;
 
 /**
  * @author Laura Garcia
  */
 public interface UserService {
-    User createUser(User user);
+    UserDto createUser(UserDto userDto);
+
+    UserAdminDto createAdmin(UserAdminDto userAdminDto);
+
+    UserDto createDriver(String userId);
 
     User findById(String userId);
 
+    UserDto findUserDtoById(String userId);
+
     User findByEmail(String email);
 
-    List<User> getAll();
+    List<UserDto> getAll();
 
-    User deleteUser(String userId);
+    UserDto deleteUser(String userId);
 
-    User updateUser(User user, String userId);
+    UserDto updateUser(UserDto userDto, String userId);
 
 }
