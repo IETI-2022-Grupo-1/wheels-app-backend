@@ -8,7 +8,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
-
+//
+//public class TokenAuthentication {
+//}
 public class TokenAuthentication extends AbstractAuthenticationToken {
     String token;
     String subject;

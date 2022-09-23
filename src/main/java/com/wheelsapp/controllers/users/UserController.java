@@ -30,7 +30,7 @@ public class UserController {
         return new ResponseEntity<>(userService.getAll(), HttpStatus.OK);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{userId}")
     public ResponseEntity<UserDto> findById(@PathVariable String userId) {
         return new ResponseEntity<>(userService.findUserDtoById(userId), HttpStatus.OK);
     }
@@ -49,15 +49,15 @@ public class UserController {
         return new ResponseEntity<>(userService.createAdmin(userAdminDto), HttpStatus.CREATED);
     }
 
-    @PutMapping( "/{id}" )
+    @PutMapping( "/{userId}" )
     public ResponseEntity<UserDto> update(@RequestBody @Valid UserDto userDto,
                                           @PathVariable String userId,BindingResult bindingResult ) {
         if(bindingResult.hasErrors()) throw ExceptionGenerator.getException(ExceptionType.INVALID_OBJECT, "Incorrectly formed request");
         return new ResponseEntity<>(userService.updateUser(userDto, userId), HttpStatus.OK);
     }
 
-    @DeleteMapping( "/{id}" )
-    public ResponseEntity<UserDto> delete(@PathVariable String id ) {
-        return new ResponseEntity<>(userService.deleteUser(id), HttpStatus.OK);
+    @DeleteMapping( "/{userId}" )
+    public ResponseEntity<UserDto> delete(@PathVariable String userId ) {
+        return new ResponseEntity<>(userService.deleteUser(userId), HttpStatus.OK);
     }
 }

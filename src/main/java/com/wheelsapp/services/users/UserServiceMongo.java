@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import com.wheelsapp.utils.RoleEnum;
 import org.modelmapper.ModelMapper;
+import com.wheelsapp.utils.RoleEnum;
 import com.wheelsapp.dto.users.UserDto;
 import com.wheelsapp.entities.users.User;
 import com.wheelsapp.dto.users.UserAdminDto;
@@ -24,9 +24,10 @@ public class UserServiceMongo implements UserService {
 
     private final UserRepository userRepository;
 
-    private ModelMapper modelMapper;
+    private final ModelMapper modelMapper;
 
-    public UserServiceMongo(@Autowired UserRepository userRepository ){
+    public UserServiceMongo(@Autowired UserRepository userRepository, @Autowired ModelMapper modelMapper){
+        this.modelMapper = modelMapper;
         this.userRepository = userRepository;
     }
 
