@@ -1,8 +1,7 @@
 package com.wheelsapp.exception;
 
-import java.time.LocalDateTime;
-
 import lombok.Data;
+import java.time.LocalDateTime;
 
 @Data
 public class ExceptionResponse {

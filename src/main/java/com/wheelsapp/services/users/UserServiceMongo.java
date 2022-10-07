@@ -39,24 +39,36 @@ public class UserServiceMongo implements UserService {
     @Override
     public UserDto createUser(UserDto userDto) {
         Organization organization = organizationService.findById(userDto.getOrganization());
-        User user = new User(userDto, organization);
-        userRepository.save(user);
-        return modelMapper.map(user, UserDto.class);
+        Boolean userByEmail = userRepository.findByEmail(userDto.getEmail()) == null;
+        if(userByEmail){
+            User user = new User(userDto, organization);
+            userRepository.save(user);
+            return modelMapper.map(user, UserDto.class);
+        }
+        throw ExceptionGenerator.getException(ExceptionType.DUPLICATE_ENTITY, "Invalid Credentials");
     }
 
     @Override
     public UserAdminDto createAdmin(UserAdminDto userAdminDto) {
-        User user = new User(userAdminDto);
-        userRepository.save(user);
-        return modelMapper.map(user, UserAdminDto.class);
+        Boolean userByEmail = userRepository.findByEmail(userAdminDto.getEmail()) == null;
+        if(userByEmail){
+            User user = new User(userAdminDto);
+            userRepository.save(user);
+            return modelMapper.map(user, UserAdminDto.class);
+        }
+        throw ExceptionGenerator.getException(ExceptionType.DUPLICATE_ENTITY, "Invalid Credentials");
     }
 
     @Override
     public UserDto createDriver(String userId) {
-        User user = findById(userId);
-        user.addRole(RoleEnum.DRIVER);
-        userRepository.save(user);
-        return modelMapper.map(user, UserDto.class);
+        Boolean userById = findById(userId) !=  null;
+        if(userById){
+            User user = findById(userId);
+            user.addRole(RoleEnum.DRIVER);
+            userRepository.save(user);
+            return modelMapper.map(user, UserDto.class);
+        }
+        throw ExceptionGenerator.getException(ExceptionType.NOT_FOUND, "User not found");
     }
 
     @Override
@@ -64,8 +76,8 @@ public class UserServiceMongo implements UserService {
         Optional<User>  possibleUser = userRepository.findById(userId);
         if(possibleUser.isPresent()){
             return possibleUser.get();
-        }else
-            throw ExceptionGenerator.getException(ExceptionType.DUPLICATE_ENTITY, "User not found");
+        }
+        throw ExceptionGenerator.getException(ExceptionType.NOT_FOUND, "User not found");
     }
 
     @Override
@@ -79,7 +91,7 @@ public class UserServiceMongo implements UserService {
         if(possibleUser.isPresent()){
             return possibleUser.get();
         }else
-            throw ExceptionGenerator.getException(ExceptionType.DUPLICATE_ENTITY, "Email not found");
+            throw ExceptionGenerator.getException(ExceptionType.NOT_FOUND, "Email not found");
     }
 
     @Override
@@ -106,5 +118,4 @@ public class UserServiceMongo implements UserService {
         userRepository.save(userToUpdate);
         return modelMapper.map(userToUpdate, UserDto.class);
     }
-
 }
