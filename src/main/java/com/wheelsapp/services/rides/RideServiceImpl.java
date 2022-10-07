@@ -49,59 +49,67 @@ public class RideServiceImpl implements RideService {
 
     @Override
     public Ride getRideDetail(String id) {
-        return rideRepository.findById(id).get();
+        Ride ride = new Ride();
+        Optional<Ride> rideOpt = rideRepository.findById(id);
+        if (rideOpt.isPresent()) {
+            ride = rideOpt.get();
+        }
+        return ride;
     }
 
     @Override
     public Ride updateRide(Ride ride, String id) {
-        Ride rideToUpdate = rideRepository.findById(id).get();
+        Ride rideToUpdate = new Ride();
+        Optional<Ride> rideOpt = rideRepository.findById(id);
+        if (rideOpt.isPresent()) {
+            rideToUpdate = rideOpt.get();
+        }
         rideToUpdate.updateRide(ride);
         return rideRepository.save(rideToUpdate);
     }
 
     @Override
     public Ride deleteRide(String id) {
-        Ride ride = rideRepository.findById(id).get();
-        ride.setIsActive(false);
+        Ride ride = new Ride();
+        Optional<Ride> rideOpt = rideRepository.findById(id);
+        if (rideOpt.isPresent()) {
+            ride = rideOpt.get();
+            ride.setIsActive(false);
+        }
         return ride;
     }
 
     @Override
-    public List<Ride> getAllArrivalDate(String arrival_date) throws ParseException {
+    public List<Ride> getAllArrivalDate(String arrivalDate) throws ParseException {
         List<Ride> rides = new ArrayList<>();
-        Date date = convertStringDate(arrival_date);
+        Date date = convertStringDate(arrivalDate);
         for(Ride ride: getAllRides()) {
-            if (ride.getIsActive()) {
-                if (ride.getArrivalHour().getYear() == date.getYear() && ride.getArrivalHour().getMonth() == date.getMonth() && ride.getArrivalHour().getDate() == date.getDate() && ride.getArrivalHour().getHours() == date.getHours()) {
+            if (ride.getIsActive() && validateDate(convertDateCalendar(ride.getArrivalHour()), convertDateCalendar(date))) {
                     rides.add(ride);
-                }
             }
         }
         return rides;
     }
 
     @Override
-    public List<Ride> getAllDepartureDate(String departure_date) throws ParseException {
+    public List<Ride> getAllDepartureDate(String departureDate) throws ParseException {
         List<Ride> rides = new ArrayList<>();
-        Date date = convertStringDate(departure_date);
+        Date date = convertStringDate(departureDate);
         for(Ride ride: getAllRides()) {
-            if (ride.getIsActive()) {
-                if (ride.getDepartureHour().getYear() == date.getYear() && ride.getDepartureHour().getMonth() == date.getMonth() && ride.getDepartureHour().getDate() == date.getDate() && ride.getDepartureHour().getHours() == date.getHours()) {
-                    rides.add(ride);
-                }
+            if (ride.getIsActive() && validateDate(convertDateCalendar(ride.getDepartureHour()), convertDateCalendar(date))) {
+                rides.add(ride);
             }
         }
         return rides;
     }
 
     @Override
-    public List<Ride> getAllSeatsDate(Integer seats_available) {
+    public List<Ride> getAllSeatsDate(Integer seatsAvailable) {
         List<Ride> rides = new ArrayList<>();
         for(Ride ride: getAllRides()) {
-            if (ride.getIsActive()){
-                if (seats_available <= ride.getAvailableSeats()) {
-                    rides.add(ride);
-                }
+            if (Boolean.TRUE.equals(ride.getIsActive()) && (seatsAvailable <= ride.getAvailableSeats())){
+
+                rides.add(ride);
             }
         }
         return rides;
@@ -113,10 +121,8 @@ public class RideServiceImpl implements RideService {
         List<Ride> rides = new ArrayList<>();
         for(Ride ride: getAllRides()) {
             for(String keyw: ride.getRoute()) {
-                if (ride.getIsActive()) {
-                    if (keyword.equals(keyw)) {
-                        rides.add(ride);
-                    }
+                if (Boolean.TRUE.equals(ride.getIsActive()) && keyword.equals(keyw)) {
+                    rides.add(ride);
                 }
             }
         }
@@ -125,7 +131,11 @@ public class RideServiceImpl implements RideService {
 
     @Override
     public Ride createReserve(RideDto rideDto) throws Exception {
-        Ride ride = rideRepository.findById(rideDto.getId()).get();
+        Ride ride = new Ride();
+        Optional<Ride> rideOpt = rideRepository.findById(rideDto.getId());
+        if (rideOpt.isPresent()) {
+            ride = rideOpt.get();
+        }
 
         if(rideDto.getStopsList().size() > ride.getAvailableSeats()) {
             throw new Exception("The required size is insufficient");
@@ -142,7 +152,11 @@ public class RideServiceImpl implements RideService {
 
     @Override
     public Ride deleteReserve(String idRide, String idUser) throws Exception {
-        Ride ride = rideRepository.findById(idRide).get();
+        Ride ride = new Ride();
+        Optional<Ride> rideOpt = rideRepository.findById(idRide);
+        if (rideOpt.isPresent()) {
+            ride = rideOpt.get();
+        }
         ArrayList<String> passengersRemove = removePassenger(new ArrayList<>(ride.getPassengerList()), ride, idUser);
         HashMap<String, String> stopsRemove = removeStops(new HashMap<>(ride.getStopsList()), ride, idUser);
         int con = ride.getPassengerList().size()-passengersRemove.size();
@@ -156,13 +170,16 @@ public class RideServiceImpl implements RideService {
 
     @Override
     public Ride putReserve(RideDto rideDto) throws Exception {
-        Ride ride = rideRepository.findById(rideDto.getId()).get();
+        Ride ride = new Ride();
+        Optional<Ride> rideOpt = rideRepository.findById(rideDto.getId());
+        if (rideOpt.isPresent()) {
+            ride = rideOpt.get();
+        }
         ArrayList<String> keys = new ArrayList<>(ride.getStopsList().keySet());
         ArrayList<String> passengers = removePassenger(new ArrayList<>(ride.getPassengerList()), ride, keys.get(0).split("-")[0]);
         HashMap<String, String> stops = removeStops(new HashMap<>(ride.getStopsList()), ride, keys.get(0).split("-")[0]);
         int availableSeats = ride.getAvailableSeats() + ride.getPassengerList().size()-passengers.size();
         int seatsReserved = ride.getSeatsReserved() - ride.getPassengerList().size()-passengers.size();
-        System.out.println(stops.size()+" "+availableSeats);
         if(rideDto.getStopsList().size() > availableSeats) {
             throw new Exception("The required size is insufficient");
         }
@@ -179,19 +196,27 @@ public class RideServiceImpl implements RideService {
     }
 
     public Date convertStringDate(String dateS) throws ParseException {
-        SimpleDateFormat formatter6=new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
         Calendar cal = Calendar.getInstance();
-        cal.setTime(formatter6.parse(dateS));
+        cal.setTime(formatter.parse(dateS));
         cal.set(Calendar.HOUR, cal.get(Calendar.HOUR)-5);
         return cal.getTime();
     }
 
+    public Calendar convertDateCalendar(Date date) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        return cal;
+    }
+
+    private Boolean validateDate(Calendar calRide, Calendar cal) {
+        return calRide.get(Calendar.YEAR) == cal.get(Calendar.YEAR) && calRide.get(Calendar.MONTH) == cal.get(Calendar.MONTH) && calRide.get(Calendar.DATE) == cal.get(Calendar.DATE) && calRide.get(Calendar.HOUR) == cal.get(Calendar.HOUR);
+    }
+
     private ArrayList<String> removePassenger (ArrayList<String> passengersRemove, Ride ride,String idUser) throws Exception {
         for (String i: ride.getPassengerList()) {
-            if (i.equals(idUser)) {
-                if(!passengersRemove.remove(idUser)) {
-                    throw new Exception("The user was impossible to delete");
-                }
+            if ((i.equals(idUser)) && (!passengersRemove.remove(idUser))) {
+                throw new Exception("The user was impossible to delete");
             }
         }
         return passengersRemove;
@@ -199,10 +224,8 @@ public class RideServiceImpl implements RideService {
 
     private HashMap<String, String> removeStops (HashMap<String, String> stopsRemove, Ride ride,String idUser) throws Exception {
         for (String key: ride.getStopsList().keySet()) {
-            if (key.split("-")[0].equals(idUser)) {
-                if (!stopsRemove.remove(key, ride.getStopsList().get(key))) {
-                    throw new Exception("The user was impossible to delete");
-                }
+            if ((key.split("-")[0].equals(idUser)) && (!stopsRemove.remove(key, ride.getStopsList().get(key)))) {
+                throw new Exception("The user was impossible to delete");
             }
         }
         return stopsRemove;

@@ -16,9 +16,9 @@ public interface RideService {
     Ride getRideDetail(String id);
     Ride updateRide(Ride ride, String id);
     Ride deleteRide(String id);
-    List<Ride> getAllArrivalDate(String arrival_date) throws ParseException;
-    List<Ride> getAllDepartureDate(String departure_date) throws ParseException;
-    List<Ride> getAllSeatsDate(Integer seats_available);
+    List<Ride> getAllArrivalDate(String arrivalDate) throws ParseException;
+    List<Ride> getAllDepartureDate(String departureDate) throws ParseException;
+    List<Ride> getAllSeatsDate(Integer seatsAvailable);
     List<Ride> getKeyword(String keyword);
     Ride createReserve(RideDto rideDto) throws Exception;
     Ride deleteReserve(String idRide, String idUser) throws Exception;

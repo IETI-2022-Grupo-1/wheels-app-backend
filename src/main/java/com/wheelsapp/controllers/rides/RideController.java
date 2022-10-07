@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
 import java.util.*;
 
 /**
@@ -39,33 +40,33 @@ public class RideController {
         }
     }
 
-    @GetMapping("/{ride_id}")
-    public ResponseEntity<RideDto> getRideDetails(@PathVariable String ride_id){
+    @GetMapping("/{rideId}")
+    public ResponseEntity<RideDto> getRideDetails(@PathVariable String rideId){
         ModelMapper modelMapper = new ModelMapper();
-        Ride ride = rideService.getRideDetail(ride_id);
+        Ride ride = rideService.getRideDetail(rideId);
         RideDto rideDto = modelMapper.map(ride, RideDto.class);
-        return new ResponseEntity<RideDto>(rideDto, HttpStatus.OK);
+        return new ResponseEntity<>(rideDto, HttpStatus.OK);
     }
 
-    @GetMapping("/user/{user_id}")
-    public ResponseEntity<List<RideDto>> getRidesByUser(@PathVariable String user_id) {
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<RideDto>> getRidesByUser(@PathVariable String userId) {
         try {
             ModelMapper modelMapper = new ModelMapper();
-            List<Ride> rides = rideService.getRideByUser(user_id);
+            List<Ride> rides = rideService.getRideByUser(userId);
             List<RideDto> ridesDTO = new ArrayList<>();
             for (Ride ride : rides) {
                 ridesDTO.add(modelMapper.map(ride, RideDto.class));
             }
-            return new ResponseEntity<List<RideDto>>(ridesDTO, HttpStatus.OK);
+            return new ResponseEntity<>(ridesDTO, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
     }
 
-    @DeleteMapping("/{ride_id}")
-    public ResponseEntity<Boolean> deleteById(@PathVariable String ride_id) {
+    @DeleteMapping("/{rideId}")
+    public ResponseEntity<Boolean> deleteById(@PathVariable String rideId) {
         try {
-            rideService.deleteRide(ride_id);
+            rideService.deleteRide(rideId);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -77,23 +78,23 @@ public class RideController {
         ModelMapper modelMapper = new ModelMapper();
         Ride ride = rideService.createRide(new Ride(rideDto));
         RideDto rideDTO = modelMapper.map(ride, RideDto.class);
-        return new ResponseEntity<RideDto>(rideDTO, HttpStatus.CREATED);
+        return new ResponseEntity<>(rideDTO, HttpStatus.CREATED);
     }
 
-    @PutMapping("/{ride_id}")
-    public ResponseEntity<RideDto> update(@RequestBody RideDto rideDto, @PathVariable String ride_id){
+    @PutMapping("/{rideId}")
+    public ResponseEntity<RideDto> update(@RequestBody RideDto rideDto, @PathVariable String rideId){
         ModelMapper modelMapper = new ModelMapper();
         Ride ride = new Ride(rideDto);
-        rideService.updateRide(ride, ride_id);
+        rideService.updateRide(ride, rideId);
         RideDto rideDTO = modelMapper.map(ride, RideDto.class);
-        return new ResponseEntity<RideDto>(rideDTO, HttpStatus.OK);
+        return new ResponseEntity<>(rideDTO, HttpStatus.OK);
     }
 
-    @GetMapping("/arrival/{arrival_date}")
-    public ResponseEntity<List<RideDto>> getAllArrivalDate(@PathVariable String arrival_date) {
+    @GetMapping("/arrival/{arrivalDate}")
+    public ResponseEntity<List<RideDto>> getAllArrivalDate(@PathVariable String arrivalDate) {
         try {
             ModelMapper modelMapper = new ModelMapper();
-            List<Ride> rides = rideService.getAllArrivalDate(arrival_date);
+            List<Ride> rides = rideService.getAllArrivalDate(arrivalDate);
             List<RideDto> ridesDto = new ArrayList<>();
             for (Ride ride : rides) {
                 ridesDto.add(modelMapper.map(ride, RideDto.class));
@@ -104,11 +105,11 @@ public class RideController {
         }
     }
 
-    @GetMapping("/departure/{departure_date}")
-    public ResponseEntity<List<RideDto>> getAllDepartureDate(@PathVariable String departure_date) {
+    @GetMapping("/departure/{departureDate}")
+    public ResponseEntity<List<RideDto>> getAllDepartureDate(@PathVariable String departureDate) throws ParseException {
         try {
             ModelMapper modelMapper = new ModelMapper();
-            List<Ride> rides = rideService.getAllDepartureDate(departure_date);
+            List<Ride> rides = rideService.getAllDepartureDate(departureDate);
             List<RideDto> ridesDto = new ArrayList<>();
             for (Ride ride : rides) {
                 ridesDto.add(modelMapper.map(ride, RideDto.class));
@@ -119,11 +120,11 @@ public class RideController {
         }
     }
 
-    @GetMapping("/seats-available/{seats_available}")
-    public ResponseEntity<List<RideDto>> getAllSeatsDate(@PathVariable Integer seats_available) {
+    @GetMapping("/seats-available/{seatsAvailable}")
+    public ResponseEntity<List<RideDto>> getAllSeatsDate(@PathVariable Integer seatsAvailable) {
         try {
             ModelMapper modelMapper = new ModelMapper();
-            List<Ride> rides = rideService.getAllSeatsDate(seats_available);
+            List<Ride> rides = rideService.getAllSeatsDate(seatsAvailable);
             List<RideDto> ridesDto = new ArrayList<>();
             for (Ride ride : rides) {
                 ridesDto.add(modelMapper.map(ride, RideDto.class));
