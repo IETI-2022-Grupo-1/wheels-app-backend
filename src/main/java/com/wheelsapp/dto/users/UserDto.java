@@ -1,5 +1,6 @@
 package com.wheelsapp.dto.users;
 
+import com.wheelsapp.dto.organizations.OrganizationDTO;
 import lombok.Data;
 import java.util.List;
 import java.util.ArrayList;

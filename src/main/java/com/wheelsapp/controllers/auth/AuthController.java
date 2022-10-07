@@ -35,6 +35,7 @@ public class AuthController {
     @PostMapping
     public TokenDto login(@RequestBody LoginDto loginDto) {
         User user = userService.findByEmail(loginDto.getEmail());
+        System.out.println("Founded user " + user);
 
         if (BCrypt.checkpw(loginDto.getPassword(), user.getPassword())) {
             return generateTokenDto(user);

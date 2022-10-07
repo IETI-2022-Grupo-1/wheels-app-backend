@@ -2,15 +2,21 @@ package com.wheelsapp.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import com.wheelsapp.exception.customExceptions.InvalidObjectException;
 import com.wheelsapp.exception.customExceptions.DuplicateEntityException;
 
+
+@RestController
+@ControllerAdvice
 public class ExceptionController {
     @ExceptionHandler(DuplicateEntityException.class)
     public ResponseEntity<ExceptionResponse> handleDuplicateEntityException(DuplicateEntityException exception,
                                                                             WebRequest request) {
+        System.out.println("DUPLICATE ENTITY EXCEPTION");
         ExceptionResponse response = new ExceptionResponse();
         response.setMessage(exception.getMessage());
         return new ResponseEntity<>(response, HttpStatus.CONFLICT);

@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.wheelsapp.entities.organizations.Organization;
+import com.wheelsapp.services.organizations.OrganizationService;
 import org.modelmapper.ModelMapper;
 import com.wheelsapp.utils.RoleEnum;
 import com.wheelsapp.dto.users.UserDto;
@@ -26,14 +28,18 @@ public class UserServiceMongo implements UserService {
 
     private final ModelMapper modelMapper;
 
-    public UserServiceMongo(@Autowired UserRepository userRepository, @Autowired ModelMapper modelMapper){
+    private final OrganizationService  organizationService;
+
+    public UserServiceMongo(@Autowired UserRepository userRepository, @Autowired ModelMapper modelMapper, @Autowired OrganizationService organizationService){
         this.modelMapper = modelMapper;
         this.userRepository = userRepository;
+        this.organizationService = organizationService;
     }
 
     @Override
     public UserDto createUser(UserDto userDto) {
-        User user = new User(userDto);
+        Organization organization = organizationService.findById(userDto.getOrganization());
+        User user = new User(userDto, organization);
         userRepository.save(user);
         return modelMapper.map(user, UserDto.class);
     }

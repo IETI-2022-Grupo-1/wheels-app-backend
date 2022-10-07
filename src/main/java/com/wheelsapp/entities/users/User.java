@@ -1,5 +1,6 @@
 package com.wheelsapp.entities.users;
 
+import com.wheelsapp.entities.organizations.Organization;
 import lombok.Data;
 import java.util.Date;
 import java.util.List;
@@ -9,6 +10,7 @@ import com.wheelsapp.utils.RoleEnum;
 import com.wheelsapp.dto.users.UserDto;
 import com.wheelsapp.dto.users.UserAdminDto;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DocumentReference;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -43,7 +45,7 @@ public class User {
     }
 
     //User Passenger
-    public User(String name, String lastName, String email, String password, String phoneNumber, String city, String organization, String profilePhoto) {
+    public User(String name, String lastName, String email, String password, String phoneNumber, String city, String profilePhoto, String organization) {
         this();
         this.city = city;
         this.name = name;
@@ -65,8 +67,8 @@ public class User {
         hashAttributes(phoneNumber, password);
     }
 
-    public User(UserDto userDto){
-        this(userDto.getName(), userDto.getLastName(), userDto.getEmail(), userDto.getPassword(), userDto.getPhoneNumber(), userDto.getCity(), userDto.getOrganization(), userDto.getProfilePhoto());
+    public User(UserDto userDto, Organization organization){
+        this(userDto.getName(), userDto.getLastName(), userDto.getEmail(), userDto.getPassword(), userDto.getPhoneNumber(), userDto.getCity(), userDto.getProfilePhoto(), userDto.getOrganization());
     }
 
     public User(UserAdminDto userAdminDto){
