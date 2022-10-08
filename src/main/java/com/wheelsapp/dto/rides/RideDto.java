@@ -1,19 +1,15 @@
 package com.wheelsapp.dto.rides;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
 /*
-* @author Julian Peña
-*/
-@Getter
-@Setter
+ * @author Julian Peña
+ */
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class RideDto {
@@ -31,4 +27,5 @@ public class RideDto {
     private Integer code;
     private ArrayList<String> passengerList;
     private HashMap<String, String> stopsList;
+
 }

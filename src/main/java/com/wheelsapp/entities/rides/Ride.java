@@ -1,17 +1,16 @@
 package com.wheelsapp.entities.rides;
 
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import com.wheelsapp.dto.rides.RideDto;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
-@Setter
-@Getter
+@Data
 @NoArgsConstructor
 @Document(collection = "Rides")
 public class Ride {
@@ -47,7 +46,7 @@ public class Ride {
         this.stopsList = rideDTO.getStopsList();
     }
 
-    public void updateRide(Ride ride){
+    public void updateRide(Ride ride) {
         id = ride.getId();
         idDriver = ride.getIdDriver();
         route = ride.getRoute();

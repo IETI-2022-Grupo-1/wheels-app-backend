@@ -11,6 +11,8 @@ import com.wheelsapp.exception.customExceptions.ObjectNotFoundException;
 import com.wheelsapp.exception.customExceptions.DuplicateEntityException;
 import com.wheelsapp.exception.customExceptions.InvalidCredentialsException;
 
+import java.text.ParseException;
+
 @RestController
 @ControllerAdvice
 public class ExceptionController {
@@ -24,7 +26,7 @@ public class ExceptionController {
 
     @ExceptionHandler(ObjectNotFoundException.class)
     public ResponseEntity<ExceptionResponse> handleNotObjectFound(ObjectNotFoundException exception,
-                                                                          WebRequest request) {
+                                                                  WebRequest request) {
         ExceptionResponse response = new ExceptionResponse();
         response.setMessage(exception.getMessage());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
@@ -44,5 +46,13 @@ public class ExceptionController {
         ExceptionResponse response = new ExceptionResponse();
         response.setMessage(exception.getMessage());
         return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(ParseException.class)
+    public ResponseEntity<ExceptionResponse> handleCannotStringException(ParseException exception,
+                                                                         WebRequest request) {
+        ExceptionResponse response = new ExceptionResponse();
+        response.setMessage(exception.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 }
