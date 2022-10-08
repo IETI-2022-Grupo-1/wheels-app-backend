@@ -2,6 +2,8 @@ package com.wheelsapp.entities.organizations;
 
 import com.wheelsapp.dto.organizations.OrganizationDTO;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.ReadOnlyProperty;
+import org.springframework.data.mongodb.core.mapping.DocumentReference;
 
 import java.time.Instant;
 import java.util.Date;

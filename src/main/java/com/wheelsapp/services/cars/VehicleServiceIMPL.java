@@ -27,9 +27,10 @@ public class VehicleServiceIMPL implements VehicleService {
     public Vehicle create(Vehicle vehicle) {
         vehicle.setCreatedAt(new Date());
         vehicle.setLastUpdate(new Date());
-        User user = userService.findById(vehicle.getIdUser());
-        user.addRole(DRIVER);
-        userService.createUser(user);
+//        User user = userService.findById(vehicle.getIdUser());
+//        user.addRole(DRIVER);
+//        userService.createUser(user);
+        userService.createDriver(vehicle.getIdUser());
         return vehicleRepository.save(vehicle);
     }
     @Override
