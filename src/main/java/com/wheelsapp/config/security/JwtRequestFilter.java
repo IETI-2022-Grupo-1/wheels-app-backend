@@ -22,6 +22,7 @@ import static com.wheelsapp.utils.constants.Constants.CLAIMS_ROLES_KEY;
 import static com.wheelsapp.utils.constants.Constants.COOKIE_NAME;
 
 @Component
+//public class JwtRequestFilter{}
 public class JwtRequestFilter extends OncePerRequestFilter {
     @Value( "${app.secret}" )
     String secret;

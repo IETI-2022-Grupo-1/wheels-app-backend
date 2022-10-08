@@ -1,21 +1,17 @@
 package com.wheelsapp.controllers.users;
 
-import com.wheelsapp.dto.users.UserAdminDto;
-import com.wheelsapp.dto.users.UserDto;
-import com.wheelsapp.entities.users.User;
-import com.wheelsapp.services.users.UserService;
-import com.wheelsapp.utils.RoleEnum;
-import com.wheelsapp.utils.errors.ErrorUser;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
+import javax.validation.Valid;
+import com.wheelsapp.dto.users.UserDto;
+import org.springframework.http.HttpStatus;
+import com.wheelsapp.dto.users.UserAdminDto;
+import com.wheelsapp.exception.ExceptionType;
+import org.springframework.http.ResponseEntity;
+import com.wheelsapp.services.users.UserService;
+import org.springframework.web.bind.annotation.*;
+import com.wheelsapp.exception.ExceptionGenerator;
+import org.springframework.validation.BindingResult;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * @author Laura Garcia
@@ -31,79 +27,37 @@ public class UserController {
 
     @GetMapping
     public ResponseEntity<List<UserDto>> getAll() {
-        ModelMapper modelMapper = new ModelMapper();
-        List<User> users = userService.getAll();
-        List<UserDto> usersDto = new ArrayList<>();
-        for (User user : users) {
-            UserDto userDto = modelMapper.map(user, UserDto.class);
-            usersDto.add(userDto);
-        }
-        return new ResponseEntity<>(usersDto, HttpStatus.OK);
+        return new ResponseEntity<>(userService.getAll(), HttpStatus.OK);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<UserDto> findById(@PathVariable String id) {
-        ModelMapper modelMapper = new ModelMapper();
-        try {
-            User user = userService.findById(id);
-            UserDto userDto = modelMapper.map(user, UserDto.class);
-            return new ResponseEntity<>(userDto, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    @GetMapping("/{userId}")
+    public ResponseEntity<UserDto> findById(@PathVariable String userId) {
+        return new ResponseEntity<>(userService.findUserDtoById(userId), HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<UserDto> createUser(@RequestBody @Valid UserDto userDto, BindingResult bindingResult) {
-        if(bindingResult.hasErrors()) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        ModelMapper modelMapper = new ModelMapper();
-        try {
-            User user = new User(userDto);
-            userService.createUser(user);
-            userDto = modelMapper.map(user, UserDto.class);
-            return new ResponseEntity<>(userDto, HttpStatus.CREATED);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return new ResponseEntity<>(HttpStatus.CONFLICT);
-        }
+    public ResponseEntity<UserDto> createUser(@RequestBody @Valid UserDto userDto,
+                                              BindingResult bindingResult) {
+        if(bindingResult.hasErrors()) throw ExceptionGenerator.getException(ExceptionType.INVALID_OBJECT, "Incorrectly formed request");
+        return new ResponseEntity<>(userService.createUser(userDto), HttpStatus.CREATED);
     }
 
     @PostMapping("/admin")
-    public ResponseEntity<UserAdminDto> createAdmin(@RequestBody @Valid UserAdminDto userAdminDto, BindingResult bindingResult) {
+    public ResponseEntity<UserAdminDto> createAdmin(@RequestBody @Valid UserAdminDto userAdminDto,
+                                                    BindingResult bindingResult) {
         if(bindingResult.hasErrors()) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        ModelMapper modelMapper = new ModelMapper();
-        try {
-            User user = new User(userAdminDto);
-            userService.createUser(user);
-            userAdminDto = modelMapper.map(user, UserAdminDto.class);
-            return new ResponseEntity<>(userAdminDto, HttpStatus.CREATED);
-
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return new ResponseEntity<>(HttpStatus.CONFLICT);
-        }
+        return new ResponseEntity<>(userService.createAdmin(userAdminDto), HttpStatus.CREATED);
     }
 
-    @PutMapping( "/{id}" )
-    public ResponseEntity<UserDto> update( @RequestBody UserDto user, @PathVariable String id ) {
-        ModelMapper modelMapper = new ModelMapper();
-        try{
-            User userMp = modelMapper.map(user, User.class);
-            UserDto userDto =  modelMapper.map(userService.updateUser(userMp, id), UserDto.class);
-            return new ResponseEntity<>(userDto, HttpStatus.OK);
-        }catch (Exception e){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    @PutMapping( "/{userId}" )
+    public ResponseEntity<UserDto> update(@RequestBody @Valid UserDto userDto,
+                                          @PathVariable String userId,BindingResult bindingResult ) {
+        if(bindingResult.hasErrors()) throw ExceptionGenerator.getException(ExceptionType.INVALID_OBJECT, "Incorrectly formed request");
+        return new ResponseEntity<>(userService.updateUser(userDto, userId), HttpStatus.OK);
     }
 
-    @DeleteMapping( "/{id}" )
-    public ResponseEntity<Boolean> delete( @PathVariable String id ) {
-        try{
-            userService.deleteUser(id);
-            return new ResponseEntity<>(Boolean.TRUE, HttpStatus.OK);
-        }catch(Exception e){
-            return new ResponseEntity<>(Boolean.FALSE, HttpStatus.NOT_FOUND);
-        }
+    @DeleteMapping( "/{userId}" )
+    public ResponseEntity<UserDto> delete(@PathVariable String userId ) {
+        return new ResponseEntity<>(userService.deleteUser(userId), HttpStatus.OK);
     }
-
 }
