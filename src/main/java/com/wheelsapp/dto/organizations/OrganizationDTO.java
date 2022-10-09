@@ -1,5 +1,6 @@
 package com.wheelsapp.dto.organizations;
 
+import lombok.Data;
 import org.springframework.data.mongodb.core.index.Indexed;
 
 import javax.validation.constraints.Size;
@@ -9,6 +10,7 @@ import java.util.Date;
 /**
  * @author Juan Andrés Pico
  */
+@Data
 public class OrganizationDTO {
     @Size(max = 150)
     @Indexed(unique = true)
@@ -57,69 +59,5 @@ public class OrganizationDTO {
         this.isActive = true;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getNIT() {
-        return NIT;
-    }
-
-    public void setNIT(String NIT) {
-        this.NIT = NIT;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public void setDepartament(String departament) {
-        this.departament = departament;
-    }
-
-    public boolean isActive() {
-        return isActive;
-    }
-
-    public void setActive(boolean isActive) {
-        this.isActive = isActive;
-    }
-
-    public String getDepartament() {
-        return departament;
-    }
-
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public Date getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public Date getLastUpdate() {
-        return lastUpdate;
-    }
-
-    public void setLastUpdate(Date lastUpdate) {
-        this.lastUpdate = lastUpdate;
-    }
 }
 

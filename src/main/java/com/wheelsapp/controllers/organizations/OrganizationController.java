@@ -2,11 +2,14 @@ package com.wheelsapp.controllers.organizations;
 
 import com.wheelsapp.dto.organizations.OrganizationDTO;
 import com.wheelsapp.entities.organizations.Organization;
+import com.wheelsapp.exception.ExceptionGenerator;
+import com.wheelsapp.exception.ExceptionType;
 import com.wheelsapp.services.organizations.OrganizationService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
@@ -49,18 +52,11 @@ public class OrganizationController {
     }
 
     @PostMapping
-    public ResponseEntity<OrganizationDTO> createUser(@RequestBody OrganizationDTO organizationDTO) {
+    public ResponseEntity<OrganizationDTO> createUser(@RequestBody OrganizationDTO organizationDTO, BindingResult bindingResult) {
 
-        ModelMapper modelMapper = new ModelMapper();
-        try {
-            Organization organization = new Organization(organizationDTO);
-            organizationService.create(organization);
-            organizationDTO = modelMapper.map(organization, OrganizationDTO.class);
-            return new ResponseEntity<>(organizationDTO, HttpStatus.CREATED);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return new ResponseEntity<>(HttpStatus.CONFLICT);
-        }
+        if(bindingResult.hasErrors()) throw ExceptionGenerator.getException(ExceptionType.INVALID_OBJECT, "Incorrectly formed request");
+        return new ResponseEntity<OrganizationDTO>(organizationService.create(organizationDTO),HttpStatus.ACCEPTED);
+
     }
 
     @PutMapping( "/{id}" )

@@ -1,5 +1,6 @@
 package com.wheelsapp.services.organizations;
 
+import com.wheelsapp.dto.organizations.OrganizationDTO;
 import com.wheelsapp.entities.organizations.Organization;
 import com.wheelsapp.repositories.organizations.OrganizationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +18,10 @@ public class OrganizationServiceMongo implements OrganizationService{
     }
 
     @Override
-    public Organization create(Organization organization) {
+    public OrganizationDTO create(OrganizationDTO organizationDTO) {
+        Organization organization = new Organization(organizationDTO);
         organizationRepository.save(organization);
-        return organization;
+        return organizationDTO;
     }
 
     @Override

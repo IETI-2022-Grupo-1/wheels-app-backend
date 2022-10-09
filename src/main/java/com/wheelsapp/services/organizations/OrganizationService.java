@@ -1,12 +1,13 @@
 package com.wheelsapp.services.organizations;
 
+import com.wheelsapp.dto.organizations.OrganizationDTO;
 import com.wheelsapp.entities.organizations.Organization;
 
 import java.util.List;
 
 public interface OrganizationService {
 
-    Organization create(Organization organization);
+    OrganizationDTO create(OrganizationDTO organization);
 
     Organization findById(String id);
 
