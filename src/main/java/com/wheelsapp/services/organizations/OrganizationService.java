@@ -9,11 +9,13 @@ public interface OrganizationService {
 
     OrganizationDTO create(OrganizationDTO organization);
 
+    OrganizationDTO findByIdDto(String id);
+
     Organization findById(String id);
 
-    List<Organization> getAll();
+    List<OrganizationDTO> getAll();
 
-    Organization deleteById(String id);
+    OrganizationDTO deleteById(String id);
 
-    Organization update(Organization organization, String userId);
+    OrganizationDTO update(OrganizationDTO organization, String userId);
 }

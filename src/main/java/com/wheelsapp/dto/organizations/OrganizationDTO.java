@@ -12,6 +12,7 @@ import java.util.Date;
  */
 @Data
 public class OrganizationDTO {
+    private String id;
     @Size(max = 150)
     @Indexed(unique = true)
     private String name;
