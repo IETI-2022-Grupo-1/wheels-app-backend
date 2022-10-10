@@ -205,7 +205,7 @@ public class RideServiceImpl implements RideService {
         try {
             cal.setTime(formatter.parse(dateS));
         } catch (ParseException e) {
-            throw ExceptionGenerator.getException(ExceptionType.NOT_FOUND, "Date not found");
+            throw ExceptionGenerator.getException(ExceptionType.INVALID_OBJECT, "Date not found");
         }
         cal.set(Calendar.HOUR, cal.get(Calendar.HOUR) - 5);
         return cal.getTime();
