@@ -29,10 +29,8 @@ public class OrganizationServiceMongo implements OrganizationService{
 
     @Override
     public OrganizationDTO create(OrganizationDTO organizationDTO) {
-        System.out.println("Estoy respondiendo desde el servicio");
-        Boolean organizationNit = organizationRepository.findByNIT(organizationDTO.getNIT()) == null;
-        if(organizationNit){
-            System.out.println("Entro al if ");
+        Optional<Organization> organizationd = organizationRepository.findByNIT(organizationDTO.getNIT());
+        if(!(organizationd.isPresent())){
             Organization organization = new Organization(organizationDTO);
             organizationRepository.save(organization);
             return modelMapper.map(organization, OrganizationDTO.class);

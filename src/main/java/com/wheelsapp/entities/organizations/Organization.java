@@ -10,7 +10,7 @@ import org.springframework.data.mongodb.core.mapping.DocumentReference;
 import java.time.Instant;
 import java.util.Date;
 @Data
-@Document(collection = "organizations")
+//@Document(collection = "organizations")
 public class Organization {
     @Id
     private String id;
