@@ -69,8 +69,8 @@ public class OrganizationServiceMongo implements OrganizationService{
             organization.setActive(false);
             organizationRepository.save(organization);
             return  modelMapper.map(organization,OrganizationDTO.class);
-        }else{return  null; }
-
+        }
+        throw ExceptionGenerator.getException(ExceptionType.NOT_FOUND, "Organization not found");
     }
 
     @Override
