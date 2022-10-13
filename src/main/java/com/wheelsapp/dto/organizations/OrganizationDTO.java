@@ -34,7 +34,7 @@ public class OrganizationDTO {
     private boolean isActive;
 
 
-    public OrganizationDTO(String name, String NIT, String city, String departament, String phone, Date createdAt, Date lastUpdate){
+    public OrganizationDTO(String name, String NIT, String city, String departament, String phone, Date createdAt, Date lastUpdate,boolean isActive){
         this();
         this.name = name;
         this.NIT = NIT;
@@ -43,6 +43,7 @@ public class OrganizationDTO {
         this.phone = phone;
         this.createdAt = createdAt;
         this.lastUpdate = lastUpdate;
+        this.isActive = isActive;
     }
 
     public OrganizationDTO(String name, String NIT, String city, String departament, String phone) {

@@ -37,8 +37,7 @@ public class OrganizationController {
     }
 
     @GetMapping( "/{id}" )
-    public ResponseEntity<OrganizationDTO> findById( @PathVariable String id , BindingResult bindingResult) {
-
+    public ResponseEntity<OrganizationDTO> findById( @PathVariable String id) {
         return new ResponseEntity<OrganizationDTO>(organizationService.findByIdDto(id),HttpStatus.ACCEPTED);
     }
 

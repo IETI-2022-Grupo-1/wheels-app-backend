@@ -83,6 +83,7 @@ public class OrganizationServiceMongo implements OrganizationService{
             oldOrganization.setNIT(organizationDTO.getNIT());
             oldOrganization.setLastUpdate(organizationDTO.getLastUpdate());
             oldOrganization.setName(organizationDTO.getName());
+            oldOrganization.setActive(organizationDTO.isActive());
             return modelMapper.map(organizationRepository.save(oldOrganization),OrganizationDTO.class);
         }return null;
     }

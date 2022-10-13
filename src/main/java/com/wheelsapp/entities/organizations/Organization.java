@@ -36,7 +36,7 @@ public class Organization {
         this.isActive = true;
     }
     // Creating Organization with all params
-    public Organization(String name, String NIT, String city, String departament, String phone, Date createdAt, Date lastUpdate) {
+    public Organization(String name, String NIT, String city, String departament, String phone, Date createdAt, Date lastUpdate,boolean isActive) {
         this();
         this.name = name;
         this.NIT = NIT;
@@ -45,6 +45,7 @@ public class Organization {
         this.phone = phone;
         this.createdAt = createdAt;
         this.lastUpdate = lastUpdate;
+        this.isActive = isActive;
     }
     // Creatioón withouth createdAt and lastUpdate
     public Organization(String name, String NIT, String city, String departament, String phone) {
