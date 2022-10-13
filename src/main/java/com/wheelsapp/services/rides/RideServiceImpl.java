@@ -30,20 +30,27 @@ public class RideServiceImpl implements RideService {
     }
 
     @Override
-    public Ride createRide(Ride ride) {
-        return rideRepository.save(ride);
+    public RideDto createRide(RideDto rideDto) {
+        Ride ride = new Ride(rideDto);
+        RideDto rideDto1 = modelMapper.map(rideRepository.save(ride), RideDto.class);
+        return rideDto1;
     }
 
     @Override
-    public List<Ride> getAllRides() {
-        return rideRepository.findAll();
+    public List<RideDto> getAllRides() {
+        List<Ride> rides = rideRepository.findAll();
+        List<RideDto> rideDTO = new ArrayList<>();
+        for (Ride ride : rides) {
+            rideDTO.add(modelMapper.map(ride, RideDto.class));
+        }
+        return rideDTO;
     }
 
     @Override
-    public List<Ride> getRideByUser(String userId) {
-        List<Ride> rides = new ArrayList<>();
+    public List<RideDto> getRideByUser(String userId) {
+        List<RideDto> rides = new ArrayList<>();
         Date date = Date.from(Instant.now());
-        for (Ride ride : getAllRides()) {
+        for (RideDto ride: getAllRides()){
             if (ride.getJourneyDate().after(date) && ride.getIdDriver().equals(userId)) {
                 rides.add(getRideDetail(ride.getId()));
             }
@@ -52,42 +59,45 @@ public class RideServiceImpl implements RideService {
     }
 
     @Override
-    public Ride getRideDetail(String id) {
+    public RideDto getRideDetail(String id) {
         Ride ride = new Ride();
         Optional<Ride> rideOpt = rideRepository.findById(id);
         if (rideOpt.isPresent()) {
             ride = rideOpt.get();
         }
-        return ride;
+        return modelMapper.map(ride, RideDto.class);
     }
 
     @Override
-    public Ride updateRide(Ride ride, String id) {
+    public RideDto updateRide(RideDto rideDto, String id) {
         Ride rideToUpdate = new Ride();
         Optional<Ride> rideOpt = rideRepository.findById(id);
         if (rideOpt.isPresent()) {
             rideToUpdate = rideOpt.get();
         }
-        rideToUpdate.updateRide(ride);
-        return rideRepository.save(rideToUpdate);
+        Ride ride2 = modelMapper.map(rideDto, Ride.class);
+        rideToUpdate.updateRide(ride2);
+        rideRepository.save(rideToUpdate);
+        return modelMapper.map(rideToUpdate, RideDto.class);
     }
 
     @Override
-    public Ride deleteRide(String id) {
+    public RideDto deleteRide(String id) {
         Ride ride = new Ride();
         Optional<Ride> rideOpt = rideRepository.findById(id);
         if (rideOpt.isPresent()) {
             ride = rideOpt.get();
             ride.setIsActive(false);
+            rideRepository.save(ride);
         }
-        return ride;
+        return modelMapper.map(ride, RideDto.class);
     }
 
     @Override
     public List<RideDto> getAllArrivalDate(String arrivalDate) {
-        List<Ride> rides = new ArrayList<>();
+        List<RideDto> rides = new ArrayList<>();
         Date date = convertStringDate(arrivalDate);
-        for (Ride ride : getAllRides()) {
+        for (RideDto ride : getAllRides()) {
             if (ride.getIsActive() && validateDate(convertDateCalendar(ride.getArrivalHour()), convertDateCalendar(date))) {
                 rides.add(ride);
             }
@@ -97,9 +107,9 @@ public class RideServiceImpl implements RideService {
 
     @Override
     public List<RideDto> getAllDepartureDate(String departureDate) {
-        List<Ride> rides = new ArrayList<>();
+        List<RideDto> rides = new ArrayList<>();
         Date date = convertStringDate(departureDate);
-        for (Ride ride : getAllRides()) {
+        for (RideDto ride : getAllRides()) {
             if (ride.getIsActive() && validateDate(convertDateCalendar(ride.getDepartureHour()), convertDateCalendar(date))) {
                 rides.add(ride);
             }
@@ -109,8 +119,8 @@ public class RideServiceImpl implements RideService {
 
     @Override
     public List<RideDto> getAllSeatsDate(Integer seatsAvailable) {
-        List<Ride> rides = new ArrayList<>();
-        for (Ride ride : getAllRides()) {
+        List<RideDto> rides = new ArrayList<>();
+        for (RideDto ride : getAllRides()) {
             if (Boolean.TRUE.equals(ride.getIsActive()) && (seatsAvailable <= ride.getAvailableSeats())) {
 
                 rides.add(ride);
@@ -122,8 +132,8 @@ public class RideServiceImpl implements RideService {
     @Override
     public List<RideDto> getKeyword(String keyword) {
 
-        List<Ride> rides = new ArrayList<>();
-        for (Ride ride : getAllRides()) {
+        List<RideDto> rides = new ArrayList<>();
+        for (RideDto ride : getAllRides()) {
             for (String keyw : ride.getRoute()) {
                 if (Boolean.TRUE.equals(ride.getIsActive()) && keyword.equals(keyw)) {
                     rides.add(ride);
