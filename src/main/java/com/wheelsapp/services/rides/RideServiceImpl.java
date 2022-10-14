@@ -13,7 +13,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.*;
-import java.util.stream.Collectors;
+
 
 /**
  * @author Juan Cadavid
@@ -32,8 +32,12 @@ public class RideServiceImpl implements RideService {
     @Override
     public RideDto createRide(RideDto rideDto) {
         Ride ride = new Ride(rideDto);
-        RideDto rideDto1 = modelMapper.map(rideRepository.save(ride), RideDto.class);
-        return rideDto1;
+        rideRepository.save(ride);
+        Optional<Ride> rideOpt = rideRepository.findById(ride.getId());
+        if(rideOpt.isPresent()){
+            return modelMapper.map(ride, RideDto.class);
+        }
+        throw ExceptionGenerator.getException(ExceptionType.NOT_FOUND, "Ride cannot be created");
     }
 
     @Override
@@ -48,14 +52,23 @@ public class RideServiceImpl implements RideService {
 
     @Override
     public List<RideDto> getRideByUser(String userId) {
+        boolean flag = false;
         List<RideDto> rides = new ArrayList<>();
         Date date = Date.from(Instant.now());
         for (RideDto ride: getAllRides()){
             if (ride.getJourneyDate().after(date) && ride.getIdDriver().equals(userId)) {
+                flag = false;
                 rides.add(getRideDetail(ride.getId()));
             }
+            else {
+                flag = true;
+            }
+        }
+        if(flag) {
+            throw ExceptionGenerator.getException(ExceptionType.NOT_FOUND, "Rides not found");
         }
         return rides;
+
     }
 
     @Override
@@ -64,8 +77,9 @@ public class RideServiceImpl implements RideService {
         Optional<Ride> rideOpt = rideRepository.findById(id);
         if (rideOpt.isPresent()) {
             ride = rideOpt.get();
+            return modelMapper.map(ride, RideDto.class);
         }
-        return modelMapper.map(ride, RideDto.class);
+        throw ExceptionGenerator.getException(ExceptionType.NOT_FOUND, "Ride not found");
     }
 
     @Override
@@ -74,23 +88,25 @@ public class RideServiceImpl implements RideService {
         Optional<Ride> rideOpt = rideRepository.findById(id);
         if (rideOpt.isPresent()) {
             rideToUpdate = rideOpt.get();
+            Ride ride2 = modelMapper.map(rideDto, Ride.class);
+            rideToUpdate.updateRide(ride2);
+            rideRepository.save(rideToUpdate);
+            return modelMapper.map(rideToUpdate, RideDto.class);
         }
-        Ride ride2 = modelMapper.map(rideDto, Ride.class);
-        rideToUpdate.updateRide(ride2);
-        rideRepository.save(rideToUpdate);
-        return modelMapper.map(rideToUpdate, RideDto.class);
+        throw ExceptionGenerator.getException(ExceptionType.NOT_FOUND, "Ride was impossible to update");
     }
 
     @Override
     public RideDto deleteRide(String id) {
-        Ride ride = new Ride();
+        Ride ride;
         Optional<Ride> rideOpt = rideRepository.findById(id);
         if (rideOpt.isPresent()) {
             ride = rideOpt.get();
             ride.setIsActive(false);
             rideRepository.save(ride);
+            return modelMapper.map(ride, RideDto.class);
         }
-        return modelMapper.map(ride, RideDto.class);
+        throw ExceptionGenerator.getException(ExceptionType.NOT_FOUND, "Ride was impossible to delete");
     }
 
     @Override
@@ -98,11 +114,12 @@ public class RideServiceImpl implements RideService {
         List<RideDto> rides = new ArrayList<>();
         Date date = convertStringDate(arrivalDate);
         for (RideDto ride : getAllRides()) {
-            if (ride.getIsActive() && validateDate(convertDateCalendar(ride.getArrivalHour()), convertDateCalendar(date))) {
+            if (ride.getIsActive() && ride.getArrivalHour() != null && validateDate(convertDateCalendar(ride.getArrivalHour()), convertDateCalendar(date))) {
                 rides.add(ride);
             }
         }
-        return rides.stream().map(ride -> modelMapper.map(ride, RideDto.class)).collect(Collectors.toList());
+        return rides;
+
     }
 
     @Override
@@ -110,11 +127,12 @@ public class RideServiceImpl implements RideService {
         List<RideDto> rides = new ArrayList<>();
         Date date = convertStringDate(departureDate);
         for (RideDto ride : getAllRides()) {
-            if (ride.getIsActive() && validateDate(convertDateCalendar(ride.getDepartureHour()), convertDateCalendar(date))) {
+            if (ride.getIsActive() && ride.getDepartureHour() != null && validateDate(convertDateCalendar(ride.getDepartureHour()), convertDateCalendar(date))) {
                 rides.add(ride);
             }
         }
-        return rides.stream().map(ride -> modelMapper.map(ride, RideDto.class)).collect(Collectors.toList());
+        return rides;
+
     }
 
     @Override
@@ -122,11 +140,11 @@ public class RideServiceImpl implements RideService {
         List<RideDto> rides = new ArrayList<>();
         for (RideDto ride : getAllRides()) {
             if (Boolean.TRUE.equals(ride.getIsActive()) && (seatsAvailable <= ride.getAvailableSeats())) {
-
                 rides.add(ride);
             }
         }
-        return rides.stream().map(ride -> modelMapper.map(ride, RideDto.class)).collect(Collectors.toList());
+        return rides;
+
     }
 
     @Override
@@ -140,7 +158,8 @@ public class RideServiceImpl implements RideService {
                 }
             }
         }
-        return rides.stream().map(ride -> modelMapper.map(ride, RideDto.class)).collect(Collectors.toList());
+        return rides;
+
     }
 
     @Override

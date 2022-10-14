@@ -1,9 +1,7 @@
 package com.wheelsapp.controllers.rides;
 
 import com.wheelsapp.dto.rides.RideDto;
-import com.wheelsapp.entities.rides.Ride;
 import com.wheelsapp.services.rides.RideService;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -40,13 +38,8 @@ public class RideController {
     }
 
     @DeleteMapping("/{rideId}")
-    public ResponseEntity<Boolean> deleteById(@PathVariable String rideId) {
-        try {
-            rideService.deleteRide(rideId);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<RideDto> deleteById(@PathVariable String rideId) {
+        return new ResponseEntity<>(rideService.deleteRide(rideId), HttpStatus.OK);
     }
 
     @PostMapping

@@ -1,7 +1,6 @@
 package com.wheelsapp.services.rides;
 
 import com.wheelsapp.dto.rides.RideDto;
-import com.wheelsapp.entities.rides.Ride;
 
 import java.util.List;
 
