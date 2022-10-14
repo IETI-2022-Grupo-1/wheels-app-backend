@@ -1,16 +1,17 @@
 package com.wheelsapp.entities.organizations;
 
 import com.wheelsapp.dto.organizations.OrganizationDTO;
+import com.wheelsapp.entities.constants.Departament;
+import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.ReadOnlyProperty;
+import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.DocumentReference;
 
 import java.time.Instant;
 import java.util.Date;
-
-/**
- * @author Laura Garcia
- */
+@Data
+//@Document(collection = "organizations")
 public class Organization {
     @Id
     private String id;
@@ -36,7 +37,7 @@ public class Organization {
         this.isActive = true;
     }
     // Creating Organization with all params
-    public Organization(String name, String NIT, String city, String departament, String phone, Date createdAt, Date lastUpdate) {
+    public Organization(String name, String NIT, String city, String departament, String phone, Date createdAt, Date lastUpdate,boolean isActive) {
         this();
         this.name = name;
         this.NIT = NIT;
@@ -45,6 +46,7 @@ public class Organization {
         this.phone = phone;
         this.createdAt = createdAt;
         this.lastUpdate = lastUpdate;
+        this.isActive = isActive;
     }
     // Creatioón withouth createdAt and lastUpdate
     public Organization(String name, String NIT, String city, String departament, String phone) {
@@ -59,80 +61,10 @@ public class Organization {
     public Organization(OrganizationDTO organizationDTO){
         this(organizationDTO.getName(), organizationDTO.getNIT(), organizationDTO.getCity(), organizationDTO.getDepartament(),organizationDTO.getPhone());
     }
-    public String getId() {
-        return id;
+
+    public Organization(OrganizationDTO organizationDTO, Departament departament){
+        this(organizationDTO.getName(), organizationDTO.getNIT(), organizationDTO.getCity(), departament.getSelected(),organizationDTO.getPhone());
     }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getNIT() {
-        return NIT;
-    }
-
-    public void setNIT(String NIT) {
-        this.NIT = NIT;
-    }
-
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public String getDepartament() {
-        return departament;
-    }
-
-    public void setDepartament(String departament) {
-        this.departament = departament;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public Date getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public Date getLastUpdate() {
-        return lastUpdate;
-    }
-
-    public void setLastUpdate(Date lastUpdate) {
-        this.lastUpdate = lastUpdate;
-    }
-
-    public boolean isActive() {
-        return isActive;
-    }
-
-    public void setActive(boolean isActive) {
-        this.isActive = isActive;
-    }
-
-
 
     /**
     public List<City> getCiudades() {
