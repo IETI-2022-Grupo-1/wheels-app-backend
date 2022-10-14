@@ -3,6 +3,8 @@ package com.wheelsapp.services.cars;
 
 import com.wheelsapp.dto.cars.VehicleDto;
 import com.wheelsapp.entities.cars.Vehicle;
+import com.wheelsapp.exception.ExceptionGenerator;
+import com.wheelsapp.exception.ExceptionType;
 import com.wheelsapp.repositories.cars.VehicleRepository;
 import com.wheelsapp.services.users.UserService;
 import org.modelmapper.ModelMapper;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -30,7 +33,15 @@ public class VehicleServiceIMPL implements VehicleService {
         vehicle.setLastUpdate(new Date());
         userService.createDriver(vehicle.getIdUser());
         vehicleRepository.save(vehicle);
-        return modelMapper.map(vehicle, VehicleDto.class);
+        Optional<Vehicle> isVehiclePresent = vehicleRepository.findById(vehicle.getIdVehicle());
+        if(isVehiclePresent.isPresent()){
+            return modelMapper.map(vehicle, VehicleDto.class);
+        }
+        else{
+            throw ExceptionGenerator.getException(ExceptionType.NOT_FOUND,"Error creating the vehicle");
+        }
+
+
     }
     @Override
     public List<VehicleDto> findAllByIdUser(String idUser) {
@@ -62,26 +73,52 @@ public class VehicleServiceIMPL implements VehicleService {
     @Override
     public VehicleDto getByVehicleId(String id){
         ModelMapper modelMapper = new ModelMapper();
-        return modelMapper.map(vehicleRepository.findById(id).orElse(null), VehicleDto.class);
+        Optional<Vehicle> isVehiclePresent = vehicleRepository.findById(id);
+        if(isVehiclePresent.isPresent()) {
+            return modelMapper.map(vehicleRepository.findById(id).orElse(null), VehicleDto.class);
+        }
+        throw ExceptionGenerator.getException(ExceptionType.NOT_FOUND,"Error, the vehicle not found");
     }
 
 
     @Override
     public VehicleDto disableById(String id) {
-        Vehicle vehicle =vehicleRepository.findById(id).orElse(null);
-        vehicle.setIsActive(false);
-        vehicle.setLastUpdate(new Date());
-        vehicleRepository.save(vehicle);
-        ModelMapper modelMapper = new ModelMapper();
-        return modelMapper.map(vehicle, VehicleDto.class);
+        Optional<Vehicle> isVehiclePresent = vehicleRepository.findById(id);
+        if(isVehiclePresent.isPresent()){
+            Vehicle vehicle =vehicleRepository.findById(id).orElse(null);
+            vehicle.setIsActive(false);
+            vehicle.setLastUpdate(new Date());
+            vehicleRepository.save(vehicle);
+            Vehicle vehiculo = vehicleRepository.findById(id).orElse(null);
+            if(vehiculo.getIsActive()){
+                throw ExceptionGenerator.getException(ExceptionType.METHOD_ERROR,"Error disabling the ID");
+            }
+            else{
+                ModelMapper modelMapper = new ModelMapper();
+                return modelMapper.map(vehicle, VehicleDto.class);
+            }
+        }
+        else{
+            throw ExceptionGenerator.getException(ExceptionType.NOT_FOUND,"Error, the vehicle not found");
+        }
     }
     @Override
     public VehicleDto updateVehicle(VehicleDto vehicleDto, String id){
         ModelMapper modelMapper = new ModelMapper();
         Vehicle vehicle = modelMapper.map(vehicleDto,Vehicle.class);
-        Vehicle vehicle1 = vehicleRepository.findById(id).orElse(null);
-        vehicle1.update(vehicle);
-        vehicleRepository.save(vehicle1);
-        return modelMapper.map(vehicle1, VehicleDto.class);
+        Optional<Vehicle> isVehiclePresent = vehicleRepository.findById(id);
+        if(isVehiclePresent.isPresent()){
+            Vehicle vehicle1 = vehicleRepository.findById(id).orElse(null);
+            vehicle1.update(vehicle);
+            vehicleRepository.save(vehicle1);
+            return modelMapper.map(vehicle1, VehicleDto.class);
+        }
+        else {
+            throw ExceptionGenerator.getException(ExceptionType.NOT_FOUND,"Error, the vehicle not found");
+        }
+
+
+
+
     }
 }
