@@ -1,6 +1,7 @@
 package com.wheelsapp.entities.organizations;
 
 import com.wheelsapp.dto.organizations.OrganizationDTO;
+import com.wheelsapp.entities.constants.Departament;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.ReadOnlyProperty;
@@ -61,6 +62,9 @@ public class Organization {
         this(organizationDTO.getName(), organizationDTO.getNIT(), organizationDTO.getCity(), organizationDTO.getDepartament(),organizationDTO.getPhone());
     }
 
+    public Organization(OrganizationDTO organizationDTO, Departament departament){
+        this(organizationDTO.getName(), organizationDTO.getNIT(), organizationDTO.getCity(), departament.getSelected(),organizationDTO.getPhone());
+    }
 
     /**
     public List<City> getCiudades() {

@@ -2,10 +2,12 @@ package com.wheelsapp.services.organizations;
 
 import com.wheelsapp.dto.organizations.OrganizationDTO;
 import com.wheelsapp.dto.users.UserDto;
+import com.wheelsapp.entities.constants.Departament;
 import com.wheelsapp.entities.organizations.Organization;
 import com.wheelsapp.entities.users.User;
 import com.wheelsapp.exception.ExceptionGenerator;
 import com.wheelsapp.exception.ExceptionType;
+import com.wheelsapp.repositories.constants.DepartamentRepository;
 import com.wheelsapp.repositories.organizations.OrganizationRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,17 +23,24 @@ public class OrganizationServiceMongo implements OrganizationService{
 
     private final OrganizationRepository organizationRepository;
     private final ModelMapper modelMapper;
-    public OrganizationServiceMongo(@Autowired OrganizationRepository organizationRepository,@Autowired ModelMapper
-                                    modelMapper){
+
+    private final DepartamentRepository departamentRepository;
+    public OrganizationServiceMongo(@Autowired OrganizationRepository organizationRepository, @Autowired DepartamentRepository departamentRepository
+            , @Autowired ModelMapper modelMapper){
         this.organizationRepository = organizationRepository;
         this.modelMapper = modelMapper;
+        this.departamentRepository = departamentRepository;
     }
 
     @Override
     public OrganizationDTO create(OrganizationDTO organizationDTO) {
         Optional<Organization> organizationd = organizationRepository.findByNIT(organizationDTO.getNIT());
         if(!(organizationd.isPresent())){
-            Organization organization = new Organization(organizationDTO);
+            Departament departament = departamentRepository.findByName(organizationDTO.getDepartament());
+            if(departament==null){
+                throw ExceptionGenerator.getException(ExceptionType.DUPLICATE_ENTITY, "Invalid Credentials");
+            }
+            Organization organization = new Organization(organizationDTO,departament);
             organizationRepository.save(organization);
             return modelMapper.map(organization, OrganizationDTO.class);
         }

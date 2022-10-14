@@ -15,10 +15,12 @@ public class Departament {
     private String name;
     public List<City> cities;
 
+    public String selected;
     public Departament(String name, List<City> cities){
         this.name = name;
         this.cities = cities;
     }
+
 
 
 }

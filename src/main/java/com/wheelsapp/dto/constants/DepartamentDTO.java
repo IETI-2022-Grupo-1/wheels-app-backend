@@ -8,6 +8,7 @@ public class DepartamentDTO{
     private String name;
     public List<CityDTO> cities;
 
+    public String selected;
     public DepartamentDTO(String name, List<CityDTO> cities){
         this.name = name;
         this.cities = cities;

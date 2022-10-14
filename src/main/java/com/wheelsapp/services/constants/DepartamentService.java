@@ -9,7 +9,6 @@ public interface DepartamentService {
 
     public List<DepartamentDTO> getAll();
 
-
     public List<CityDTO> getAllCitiesByDepartament(String name);
 
     public List<String> getAllCities();

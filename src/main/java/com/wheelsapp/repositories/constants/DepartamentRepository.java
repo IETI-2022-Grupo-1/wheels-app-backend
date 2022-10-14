@@ -7,7 +7,7 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import java.util.List;
 
 public interface DepartamentRepository extends MongoRepository<Departament, String> {
-    public List<Departament> findByName();
+    public Departament findByName(String name);
 
     public List<City> findByCities(String name);
 }

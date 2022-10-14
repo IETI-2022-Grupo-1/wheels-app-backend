@@ -1,5 +1,6 @@
 package com.wheelsapp.dto.organizations;
 
+import com.wheelsapp.entities.constants.Departament;
 import lombok.Data;
 import org.springframework.data.mongodb.core.index.Indexed;
 
@@ -54,6 +55,11 @@ public class OrganizationDTO {
         this.departament = departament;
         this.phone = phone;
     }
+
+    public OrganizationDTO(OrganizationDTO organizationDTO, Departament departament){
+        this(organizationDTO.getName(), organizationDTO.getNIT(), organizationDTO.getCity(), departament.getSelected(),organizationDTO.getPhone());
+    }
+
 
     public OrganizationDTO(){
         this.createdAt = Date.from(Instant.now());
