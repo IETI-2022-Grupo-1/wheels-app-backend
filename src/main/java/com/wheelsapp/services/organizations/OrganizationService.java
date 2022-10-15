@@ -1,21 +1,18 @@
 package com.wheelsapp.services.organizations;
 
-import com.wheelsapp.dto.organizations.OrganizationDTO;
 import com.wheelsapp.entities.organizations.Organization;
 
 import java.util.List;
 
 public interface OrganizationService {
 
-    OrganizationDTO create(OrganizationDTO organization);
-
-    OrganizationDTO findByIdDto(String id);
+    Organization create(Organization organization);
 
     Organization findById(String id);
 
-    List<OrganizationDTO> getAll();
+    List<Organization> getAll();
 
-    OrganizationDTO deleteById(String id);
+    Organization deleteById(String id);
 
-    OrganizationDTO update(OrganizationDTO organization, String userId);
+    Organization update(Organization organization, String userId);
 }
