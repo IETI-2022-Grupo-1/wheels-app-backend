@@ -36,6 +36,8 @@ public class Vehicle {
         this.description = description;
         this.photo = photo;
         this.isActive = isActive;
+        this.createdAt = new Date();
+        this.lastUpdate = new Date();
     }
 
 
