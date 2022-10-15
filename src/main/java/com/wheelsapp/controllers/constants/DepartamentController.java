@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/constants")
 public class DepartamentController {
 
     private final DepartamentService departamentService;
@@ -21,23 +21,23 @@ public class DepartamentController {
     }
     @GetMapping("/colombia")
     public ResponseEntity<List<DepartamentDTO>> getAll(){
-        return new ResponseEntity<List<DepartamentDTO>>(departamentService.getAll(), HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(departamentService.getAll(), HttpStatus.ACCEPTED);
     }
 
     @GetMapping("/departments/{name}")
     public ResponseEntity<List<CityDTO>> getAllCitiesByDepartament(@PathVariable String name){
-        return new ResponseEntity<List<CityDTO>>(departamentService.getAllCitiesByDepartament(name), HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(departamentService.getAllCitiesByDepartament(name), HttpStatus.ACCEPTED);
     }
 
     @GetMapping("/departments")
     public ResponseEntity<List<String>> getAllDepartaments(){
-        return new ResponseEntity<List<String>>(departamentService.getAllDepartaments(), HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(departamentService.getAllDepartaments(), HttpStatus.ACCEPTED);
     }
 
 
     @GetMapping("/cities")
     public ResponseEntity<List<String>> getAllCities(){
-        return new ResponseEntity<List<String>>(departamentService.getAllCities(), HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(departamentService.getAllCities(), HttpStatus.ACCEPTED);
     }
 
 }

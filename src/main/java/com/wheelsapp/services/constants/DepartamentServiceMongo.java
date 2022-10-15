@@ -4,6 +4,8 @@ import com.wheelsapp.dto.constants.CityDTO;
 import com.wheelsapp.dto.constants.DepartamentDTO;
 import com.wheelsapp.entities.constants.City;
 import com.wheelsapp.entities.constants.Departament;
+import com.wheelsapp.exception.ExceptionGenerator;
+import com.wheelsapp.exception.ExceptionType;
 import com.wheelsapp.repositories.constants.DepartamentRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,10 +55,10 @@ public class DepartamentServiceMongo implements DepartamentService {
     public List<String> getAllCities() {
         List<String>strings = new ArrayList<>();
         List<Departament> departaments = departamentRepository.findAll();
-        for(int i = 0 ; i<departaments.size();i++){
-            List<City> cities = departaments.get(i).getCities();
-            for(int j = 0 ; j<cities.size();j++){
-                strings.add(cities.get(j).getName());
+        for(Departament departament:departaments){
+            List<City> cities = departament.getCities();
+            for(City city:cities){
+                strings.add(city.getName());
             }
         }
         return strings;
@@ -66,9 +68,31 @@ public class DepartamentServiceMongo implements DepartamentService {
     public List<String> getAllDepartaments() {
         List<String>strings = new ArrayList<>();
         List<Departament> departaments = departamentRepository.findAll();
-        for(int i = 0 ; i<departaments.size();i++){
-            strings.add(departaments.get(i).getName());
+        for(Departament departament:departaments){
+            strings.add(departament.getName());
         }
         return strings;
+    }
+
+    @Override
+    public Departament findDepartamentByName(String name) {
+        Departament departament = departamentRepository.findByName(name);
+        if(departament == null){
+            throw ExceptionGenerator.getException(ExceptionType.NOT_FOUND, "Departament Not found");
+        }return departament;
+    }
+
+    @Override
+    public City findCityByName(String name, Departament departament) {
+        List<City> cities= departament.getCities();
+        City city = null;
+        for(City city1: cities){
+            if(city1.getName().equals(name)){
+                city = city1;
+            }
+        }
+        if(city ==null){
+            throw ExceptionGenerator.getException(ExceptionType.NOT_FOUND, "City Not found");
+        }return city;
     }
 }

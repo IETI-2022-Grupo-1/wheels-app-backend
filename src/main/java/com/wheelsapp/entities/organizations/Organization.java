@@ -1,6 +1,7 @@
 package com.wheelsapp.entities.organizations;
 
 import com.wheelsapp.dto.organizations.OrganizationDTO;
+import com.wheelsapp.entities.constants.City;
 import com.wheelsapp.entities.constants.Departament;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
@@ -62,21 +63,18 @@ public class Organization {
         this(organizationDTO.getName(), organizationDTO.getNIT(), organizationDTO.getCity(), organizationDTO.getDepartament(),organizationDTO.getPhone());
     }
 
-    public Organization(OrganizationDTO organizationDTO, Departament departament){
-        this(organizationDTO.getName(), organizationDTO.getNIT(), organizationDTO.getCity(), departament.getSelected(),organizationDTO.getPhone());
+    public Organization(OrganizationDTO organizationDTO, Departament departament, City city){
+        this(organizationDTO.getName(), organizationDTO.getNIT(), city.getName(), departament.getName(),organizationDTO.getPhone());
     }
 
-    /**
-    public List<City> getCiudades() {
-        return Arrays.asList(City.values());
+    public void updateOrganization(OrganizationDTO organizationDTO){
+        name = organizationDTO.getName();
+        NIT = organizationDTO.getNIT();
+        city = organizationDTO.getCity();
+        departament = organizationDTO.getDepartament();
+        phone = organizationDTO.getPhone();
+        isActive = organizationDTO.isActive();
+        lastUpdate = Date.from(Instant.now());
     }
-
-
-
-    public List<Departament> getDepartamentos() {
-        return Arrays.asList(Departament.values());
-    }
-
-**/
 
 }

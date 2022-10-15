@@ -1,17 +1,15 @@
 package com.wheelsapp.services.organizations;
 
 import com.wheelsapp.dto.organizations.OrganizationDTO;
-import com.wheelsapp.dto.users.UserDto;
+import com.wheelsapp.entities.constants.City;
 import com.wheelsapp.entities.constants.Departament;
 import com.wheelsapp.entities.organizations.Organization;
-import com.wheelsapp.entities.users.User;
 import com.wheelsapp.exception.ExceptionGenerator;
 import com.wheelsapp.exception.ExceptionType;
-import com.wheelsapp.repositories.constants.DepartamentRepository;
 import com.wheelsapp.repositories.organizations.OrganizationRepository;
+import com.wheelsapp.services.constants.DepartamentService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.aggregation.BooleanOperators;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -24,27 +22,25 @@ public class OrganizationServiceMongo implements OrganizationService{
     private final OrganizationRepository organizationRepository;
     private final ModelMapper modelMapper;
 
-    private final DepartamentRepository departamentRepository;
-    public OrganizationServiceMongo(@Autowired OrganizationRepository organizationRepository, @Autowired DepartamentRepository departamentRepository
+    private final DepartamentService departamentService;
+    public OrganizationServiceMongo(@Autowired OrganizationRepository organizationRepository, @Autowired DepartamentService departamentService
             , @Autowired ModelMapper modelMapper){
         this.organizationRepository = organizationRepository;
         this.modelMapper = modelMapper;
-        this.departamentRepository = departamentRepository;
+        this.departamentService = departamentService;
     }
 
     @Override
     public OrganizationDTO create(OrganizationDTO organizationDTO) {
         Optional<Organization> organizationd = organizationRepository.findByNIT(organizationDTO.getNIT());
         if(!(organizationd.isPresent())){
-            Departament departament = departamentRepository.findByName(organizationDTO.getDepartament());
-            if(departament==null){
-                throw ExceptionGenerator.getException(ExceptionType.DUPLICATE_ENTITY, "Invalid Credentials");
-            }
-            Organization organization = new Organization(organizationDTO,departament);
+            Departament departament = departamentService.findDepartamentByName(organizationDTO.getDepartament());
+            City city = departamentService.findCityByName(organizationDTO.getCity(),departament);
+            Organization organization = new Organization(organizationDTO,departament,city);
             organizationRepository.save(organization);
             return modelMapper.map(organization, OrganizationDTO.class);
         }
-        throw ExceptionGenerator.getException(ExceptionType.DUPLICATE_ENTITY, "Invalid Credentials");
+        throw ExceptionGenerator.getException(ExceptionType.DUPLICATE_ENTITY, "NIT already in use");
     }
 
     @Override
@@ -84,17 +80,10 @@ public class OrganizationServiceMongo implements OrganizationService{
 
     @Override
     public OrganizationDTO update(OrganizationDTO organizationDTO, String userId) {
-        if (organizationRepository.existsById(userId)) {
-            Organization oldOrganization = findById(userId);
-            oldOrganization.setCity(organizationDTO.getCity());
-            oldOrganization.setDepartament(organizationDTO.getDepartament());
-            oldOrganization.setCreatedAt(organizationDTO.getCreatedAt());
-            oldOrganization.setNIT(organizationDTO.getNIT());
-            oldOrganization.setLastUpdate(organizationDTO.getLastUpdate());
-            oldOrganization.setName(organizationDTO.getName());
-            oldOrganization.setActive(organizationDTO.isActive());
-            return modelMapper.map(organizationRepository.save(oldOrganization),OrganizationDTO.class);
-        }return null;
+        Organization organization = findById(userId);
+        organization.updateOrganization(organizationDTO);
+        organizationRepository.save(organization);
+        return modelMapper.map(organization,OrganizationDTO.class);
     }
 
 
