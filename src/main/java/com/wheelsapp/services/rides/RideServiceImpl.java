@@ -32,12 +32,7 @@ public class RideServiceImpl implements RideService {
     @Override
     public RideDto createRide(RideDto rideDto) {
         Ride ride = new Ride(rideDto);
-        rideRepository.save(ride);
-        Optional<Ride> rideOpt = rideRepository.findById(ride.getId());
-        if(rideOpt.isPresent()){
-            return modelMapper.map(ride, RideDto.class);
-        }
-        throw ExceptionGenerator.getException(ExceptionType.NOT_FOUND, "Ride cannot be created");
+        return modelMapper.map(rideRepository.save(ride), RideDto.class);
     }
 
     @Override
@@ -68,12 +63,11 @@ public class RideServiceImpl implements RideService {
             throw ExceptionGenerator.getException(ExceptionType.NOT_FOUND, "Rides not found");
         }
         return rides;
-
     }
 
     @Override
     public RideDto getRideDetail(String id) {
-        Ride ride = new Ride();
+        Ride ride;
         Optional<Ride> rideOpt = rideRepository.findById(id);
         if (rideOpt.isPresent()) {
             ride = rideOpt.get();
@@ -84,7 +78,7 @@ public class RideServiceImpl implements RideService {
 
     @Override
     public RideDto updateRide(RideDto rideDto, String id) {
-        Ride rideToUpdate = new Ride();
+        Ride rideToUpdate;
         Optional<Ride> rideOpt = rideRepository.findById(id);
         if (rideOpt.isPresent()) {
             rideToUpdate = rideOpt.get();
@@ -119,7 +113,6 @@ public class RideServiceImpl implements RideService {
             }
         }
         return rides;
-
     }
 
     @Override
@@ -132,7 +125,6 @@ public class RideServiceImpl implements RideService {
             }
         }
         return rides;
-
     }
 
     @Override
@@ -144,7 +136,6 @@ public class RideServiceImpl implements RideService {
             }
         }
         return rides;
-
     }
 
     @Override
@@ -159,7 +150,6 @@ public class RideServiceImpl implements RideService {
             }
         }
         return rides;
-
     }
 
     @Override
