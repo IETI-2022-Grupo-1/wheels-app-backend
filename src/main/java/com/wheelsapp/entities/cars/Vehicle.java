@@ -2,6 +2,7 @@ package com.wheelsapp.entities.cars;
 
 import com.wheelsapp.dto.cars.VehicleDto;
 import lombok.Data;
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -12,7 +13,7 @@ import java.util.Date;
 public class Vehicle {
     private String idUser;
     @Id
-    private String idVehicle;
+    private String idVehiclee;
     private String model;
     private String soat;
     private Integer puestos;
@@ -26,9 +27,8 @@ public class Vehicle {
 
     }
 
-    public Vehicle(String idUser, String idVehicle, String model, String soat, Integer puestos, String propertyCard, String description, String photo, boolean isActive) {
+    public Vehicle(String idUser, String model, String soat, Integer puestos, String propertyCard, String description, String photo, boolean isActive) {
         this.idUser = idUser;
-        this.idVehicle = idVehicle;
         this.model = model;
         this.soat = soat;
         this.puestos = puestos;

@@ -28,7 +28,8 @@ public class VehicleServiceIMPL implements VehicleService {
     }
     @Override
     public VehicleDto create(VehicleDto vehicleDto) {
-        Vehicle vehicle = modelMapper.map(vehicleDto,Vehicle.class);
+        ModelMapper modelMapper1 = new ModelMapper();
+        Vehicle vehicle = modelMapper1.map(vehicleDto,Vehicle.class);
         userService.createDriver(vehicle.getIdUser());
         vehicleRepository.save(vehicle);
         return modelMapper.map(vehicle, VehicleDto.class);

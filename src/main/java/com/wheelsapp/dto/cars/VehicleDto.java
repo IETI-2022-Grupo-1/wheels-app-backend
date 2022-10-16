@@ -2,6 +2,7 @@ package com.wheelsapp.dto.cars;
 
 import lombok.Data;
 
+
 @Data
 public class VehicleDto {
     private String idUser;
