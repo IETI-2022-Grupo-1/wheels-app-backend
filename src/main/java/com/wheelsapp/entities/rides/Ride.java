@@ -47,17 +47,16 @@ public class Ride {
     }
 
     public void updateRide(Ride ride) {
-        id = ride.getId();
-        idDriver = ride.getIdDriver();
-        route = ride.getRoute();
-        journeyDate = ride.getJourneyDate();
-        departureHour = ride.getDepartureHour();
-        arrivalHour = ride.getArrivalHour();
-        availableSeats = ride.getAvailableSeats();
-        seatsReserved = ride.getSeatsReserved();
-        isActive = ride.getIsActive();
-        hasStarted = ride.getHasStarted();
-        passengerList = ride.getPassengerList();
-        stopsList = ride.getStopsList();
+        this.idDriver = ride.getIdDriver();
+        this.route = ride.getRoute();
+        this.journeyDate = ride.getJourneyDate();
+        this.departureHour = ride.getDepartureHour();
+        this.arrivalHour = ride.getArrivalHour();
+        this.availableSeats = ride.getAvailableSeats();
+        this.seatsReserved = ride.getSeatsReserved();
+        this.isActive = ride.getIsActive();
+        this.hasStarted = ride.getHasStarted();
+        this.passengerList = ride.getPassengerList();
+        this.stopsList = ride.getStopsList();
     }
 }

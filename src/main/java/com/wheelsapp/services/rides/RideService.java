@@ -1,7 +1,6 @@
 package com.wheelsapp.services.rides;
 
 import com.wheelsapp.dto.rides.RideDto;
-import com.wheelsapp.entities.rides.Ride;
 
 import java.util.List;
 
@@ -9,17 +8,17 @@ import java.util.List;
  * @author Juan Cadavid
  */
 public interface RideService {
-    Ride createRide(Ride ride);
+    RideDto createRide(RideDto rideDto);
 
-    List<Ride> getAllRides();
+    List<RideDto> getAllRides();
 
-    List<Ride> getRideByUser(String userId);
+    List<RideDto> getRideByUser(String userId);
 
-    Ride getRideDetail(String id);
+    RideDto getRideDetail(String id);
 
-    Ride updateRide(Ride ride, String id);
+    RideDto updateRide(RideDto rideDto, String id);
 
-    Ride deleteRide(String id);
+    RideDto deleteRide(String id);
 
     List<RideDto> getAllArrivalDate(String arrivalDate);
 

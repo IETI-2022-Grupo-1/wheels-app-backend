@@ -1,9 +1,7 @@
 package com.wheelsapp.controllers.rides;
 
 import com.wheelsapp.dto.rides.RideDto;
-import com.wheelsapp.entities.rides.Ride;
 import com.wheelsapp.services.rides.RideService;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,67 +24,32 @@ public class RideController {
 
     @GetMapping
     public ResponseEntity<List<RideDto>> getAll() {
-        try {
-            ModelMapper modelMapper = new ModelMapper();
-            List<Ride> rides = rideService.getAllRides();
-            List<RideDto> rideDTO = new ArrayList<>();
-            for (Ride ride : rides) {
-                rideDTO.add(modelMapper.map(ride, RideDto.class));
-            }
-            return new ResponseEntity<>(rideDTO, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-        }
+        return new ResponseEntity<>(rideService.getAllRides(), HttpStatus.OK);
     }
 
     @GetMapping("/{rideId}")
     public ResponseEntity<RideDto> getRideDetails(@PathVariable String rideId) {
-        ModelMapper modelMapper = new ModelMapper();
-        Ride ride = rideService.getRideDetail(rideId);
-        RideDto rideDto = modelMapper.map(ride, RideDto.class);
-        return new ResponseEntity<>(rideDto, HttpStatus.OK);
+        return new ResponseEntity<>(rideService.getRideDetail(rideId), HttpStatus.OK);
     }
 
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<RideDto>> getRidesByUser(@PathVariable String userId) {
-        try {
-            ModelMapper modelMapper = new ModelMapper();
-            List<Ride> rides = rideService.getRideByUser(userId);
-            List<RideDto> ridesDTO = new ArrayList<>();
-            for (Ride ride : rides) {
-                ridesDTO.add(modelMapper.map(ride, RideDto.class));
-            }
-            return new ResponseEntity<>(ridesDTO, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-        }
+        return new ResponseEntity<>(rideService.getRideByUser(userId), HttpStatus.OK);
     }
 
     @DeleteMapping("/{rideId}")
-    public ResponseEntity<Boolean> deleteById(@PathVariable String rideId) {
-        try {
-            rideService.deleteRide(rideId);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<RideDto> deleteById(@PathVariable String rideId) {
+        return new ResponseEntity<>(rideService.deleteRide(rideId), HttpStatus.OK);
     }
 
     @PostMapping
     public ResponseEntity<RideDto> create(@RequestBody RideDto rideDto) {
-        ModelMapper modelMapper = new ModelMapper();
-        Ride ride = rideService.createRide(new Ride(rideDto));
-        RideDto rideDTO = modelMapper.map(ride, RideDto.class);
-        return new ResponseEntity<>(rideDTO, HttpStatus.CREATED);
+        return new ResponseEntity<>(rideService.createRide(rideDto), HttpStatus.CREATED);
     }
 
     @PutMapping("/{rideId}")
     public ResponseEntity<RideDto> update(@RequestBody RideDto rideDto, @PathVariable String rideId) {
-        ModelMapper modelMapper = new ModelMapper();
-        Ride ride = new Ride(rideDto);
-        rideService.updateRide(ride, rideId);
-        RideDto rideDTO = modelMapper.map(ride, RideDto.class);
-        return new ResponseEntity<>(rideDTO, HttpStatus.OK);
+        return new ResponseEntity<>(rideService.updateRide(rideDto, rideId), HttpStatus.OK);
     }
 
     @GetMapping("/arrival/{arrivalDate}")

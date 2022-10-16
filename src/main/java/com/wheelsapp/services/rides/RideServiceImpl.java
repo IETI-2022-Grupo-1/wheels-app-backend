@@ -13,7 +13,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.*;
-import java.util.stream.Collectors;
+
 
 /**
  * @author Juan Cadavid
@@ -30,107 +30,126 @@ public class RideServiceImpl implements RideService {
     }
 
     @Override
-    public Ride createRide(Ride ride) {
-        return rideRepository.save(ride);
+    public RideDto createRide(RideDto rideDto) {
+        Ride ride = new Ride(rideDto);
+        return modelMapper.map(rideRepository.save(ride), RideDto.class);
     }
 
     @Override
-    public List<Ride> getAllRides() {
-        return rideRepository.findAll();
+    public List<RideDto> getAllRides() {
+        List<Ride> rides = rideRepository.findAll();
+        List<RideDto> rideDTO = new ArrayList<>();
+        for (Ride ride : rides) {
+            rideDTO.add(modelMapper.map(ride, RideDto.class));
+        }
+        return rideDTO;
     }
 
     @Override
-    public List<Ride> getRideByUser(String userId) {
-        List<Ride> rides = new ArrayList<>();
+    public List<RideDto> getRideByUser(String userId) {
+        boolean flag = false;
+        List<RideDto> rides = new ArrayList<>();
         Date date = Date.from(Instant.now());
-        for (Ride ride : getAllRides()) {
+        for (RideDto ride: getAllRides()){
             if (ride.getJourneyDate().after(date) && ride.getIdDriver().equals(userId)) {
+                flag = false;
                 rides.add(getRideDetail(ride.getId()));
+            }
+            else {
+                flag = true;
+            }
+        }
+        if(flag) {
+            throw ExceptionGenerator.getException(ExceptionType.NOT_FOUND, "Rides not found");
+        }
+        return rides;
+    }
+
+    @Override
+    public RideDto getRideDetail(String id) {
+        Ride ride;
+        Optional<Ride> rideOpt = rideRepository.findById(id);
+        if (rideOpt.isPresent()) {
+            ride = rideOpt.get();
+            return modelMapper.map(ride, RideDto.class);
+        }
+        throw ExceptionGenerator.getException(ExceptionType.NOT_FOUND, "Ride not found");
+    }
+
+    @Override
+    public RideDto updateRide(RideDto rideDto, String id) {
+        Ride rideToUpdate;
+        Optional<Ride> rideOpt = rideRepository.findById(id);
+        if (rideOpt.isPresent()) {
+            rideToUpdate = rideOpt.get();
+            Ride ride2 = modelMapper.map(rideDto, Ride.class);
+            rideToUpdate.updateRide(ride2);
+            rideRepository.save(rideToUpdate);
+            return modelMapper.map(rideToUpdate, RideDto.class);
+        }
+        throw ExceptionGenerator.getException(ExceptionType.NOT_FOUND, "Ride was impossible to update");
+    }
+
+    @Override
+    public RideDto deleteRide(String id) {
+        Ride ride;
+        Optional<Ride> rideOpt = rideRepository.findById(id);
+        if (rideOpt.isPresent()) {
+            ride = rideOpt.get();
+            ride.setIsActive(false);
+            rideRepository.save(ride);
+            return modelMapper.map(ride, RideDto.class);
+        }
+        throw ExceptionGenerator.getException(ExceptionType.NOT_FOUND, "Ride was impossible to delete");
+    }
+
+    @Override
+    public List<RideDto> getAllArrivalDate(String arrivalDate) {
+        List<RideDto> rides = new ArrayList<>();
+        Date date = convertStringDate(arrivalDate);
+        for (RideDto ride : getAllRides()) {
+            if (ride.getIsActive() && ride.getArrivalHour() != null && validateDate(convertDateCalendar(ride.getArrivalHour()), convertDateCalendar(date))) {
+                rides.add(ride);
             }
         }
         return rides;
     }
 
     @Override
-    public Ride getRideDetail(String id) {
-        Ride ride = new Ride();
-        Optional<Ride> rideOpt = rideRepository.findById(id);
-        if (rideOpt.isPresent()) {
-            ride = rideOpt.get();
-        }
-        return ride;
-    }
-
-    @Override
-    public Ride updateRide(Ride ride, String id) {
-        Ride rideToUpdate = new Ride();
-        Optional<Ride> rideOpt = rideRepository.findById(id);
-        if (rideOpt.isPresent()) {
-            rideToUpdate = rideOpt.get();
-        }
-        rideToUpdate.updateRide(ride);
-        return rideRepository.save(rideToUpdate);
-    }
-
-    @Override
-    public Ride deleteRide(String id) {
-        Ride ride = new Ride();
-        Optional<Ride> rideOpt = rideRepository.findById(id);
-        if (rideOpt.isPresent()) {
-            ride = rideOpt.get();
-            ride.setIsActive(false);
-        }
-        return ride;
-    }
-
-    @Override
-    public List<RideDto> getAllArrivalDate(String arrivalDate) {
-        List<Ride> rides = new ArrayList<>();
-        Date date = convertStringDate(arrivalDate);
-        for (Ride ride : getAllRides()) {
-            if (ride.getIsActive() && validateDate(convertDateCalendar(ride.getArrivalHour()), convertDateCalendar(date))) {
-                rides.add(ride);
-            }
-        }
-        return rides.stream().map(ride -> modelMapper.map(ride, RideDto.class)).collect(Collectors.toList());
-    }
-
-    @Override
     public List<RideDto> getAllDepartureDate(String departureDate) {
-        List<Ride> rides = new ArrayList<>();
+        List<RideDto> rides = new ArrayList<>();
         Date date = convertStringDate(departureDate);
-        for (Ride ride : getAllRides()) {
-            if (ride.getIsActive() && validateDate(convertDateCalendar(ride.getDepartureHour()), convertDateCalendar(date))) {
+        for (RideDto ride : getAllRides()) {
+            if (ride.getIsActive() && ride.getDepartureHour() != null && validateDate(convertDateCalendar(ride.getDepartureHour()), convertDateCalendar(date))) {
                 rides.add(ride);
             }
         }
-        return rides.stream().map(ride -> modelMapper.map(ride, RideDto.class)).collect(Collectors.toList());
+        return rides;
     }
 
     @Override
     public List<RideDto> getAllSeatsDate(Integer seatsAvailable) {
-        List<Ride> rides = new ArrayList<>();
-        for (Ride ride : getAllRides()) {
+        List<RideDto> rides = new ArrayList<>();
+        for (RideDto ride : getAllRides()) {
             if (Boolean.TRUE.equals(ride.getIsActive()) && (seatsAvailable <= ride.getAvailableSeats())) {
-
                 rides.add(ride);
             }
         }
-        return rides.stream().map(ride -> modelMapper.map(ride, RideDto.class)).collect(Collectors.toList());
+        return rides;
     }
 
     @Override
     public List<RideDto> getKeyword(String keyword) {
 
-        List<Ride> rides = new ArrayList<>();
-        for (Ride ride : getAllRides()) {
+        List<RideDto> rides = new ArrayList<>();
+        for (RideDto ride : getAllRides()) {
             for (String keyw : ride.getRoute()) {
                 if (Boolean.TRUE.equals(ride.getIsActive()) && keyword.equals(keyw)) {
                     rides.add(ride);
                 }
             }
         }
-        return rides.stream().map(ride -> modelMapper.map(ride, RideDto.class)).collect(Collectors.toList());
+        return rides;
     }
 
     @Override
