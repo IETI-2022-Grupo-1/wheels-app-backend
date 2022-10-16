@@ -13,7 +13,7 @@ import java.util.Date;
 public class Vehicle {
     private String idUser;
     @Id
-    private String idVehiclee;
+    private String idVehicle;
     private String model;
     private String soat;
     private Integer puestos;
@@ -38,6 +38,19 @@ public class Vehicle {
         this.isActive = isActive;
         this.createdAt = new Date();
         this.lastUpdate = new Date();
+    }
+    public Vehicle(VehicleDto vehicleDto){
+        this.description=vehicleDto.getDescription();
+        this.isActive=vehicleDto.getIsActive();
+        this.model=vehicleDto.getModel();
+        this.idUser=vehicleDto.getIdUser();
+        this.soat = vehicleDto.getSoat() ;
+        this.puestos = vehicleDto.getPuestos();
+        this.propertyCard=vehicleDto.getPropertyCard();
+        this.photo=vehicleDto.getPhoto();
+        this.lastUpdate= new Date();
+        this.createdAt = new Date();
+
     }
 
 

@@ -33,7 +33,7 @@ public class VehicleController {
     }
     @GetMapping("/{id}")
     public ResponseEntity<VehicleDto> consultByIdVehicle(@PathVariable String id){
-        return new ResponseEntity<>(vehicleService.getByVehicleId(id), HttpStatus.OK);
+        return new ResponseEntity<>(vehicleService.getByVehicleDtoId(id), HttpStatus.OK);
     }
 
     @PutMapping("/{id}")

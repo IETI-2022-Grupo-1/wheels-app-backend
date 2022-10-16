@@ -28,8 +28,7 @@ public class VehicleServiceIMPL implements VehicleService {
     }
     @Override
     public VehicleDto create(VehicleDto vehicleDto) {
-        ModelMapper modelMapper1 = new ModelMapper();
-        Vehicle vehicle = modelMapper1.map(vehicleDto,Vehicle.class);
+        Vehicle vehicle = new Vehicle(vehicleDto);
         userService.createDriver(vehicle.getIdUser());
         vehicleRepository.save(vehicle);
         return modelMapper.map(vehicle, VehicleDto.class);
@@ -57,7 +56,7 @@ public class VehicleServiceIMPL implements VehicleService {
         return vehicleDtos;
     }
     @Override
-    public VehicleDto getByVehicleId(String id){
+    public VehicleDto getByVehicleDtoId(String id){
         Optional<Vehicle> isVehiclePresent = vehicleRepository.findById(id);
         if(isVehiclePresent.isPresent()) {
             return modelMapper.map(vehicleRepository.findById(id).orElse(null), VehicleDto.class);
@@ -65,10 +64,18 @@ public class VehicleServiceIMPL implements VehicleService {
         throw ExceptionGenerator.getException(ExceptionType.NOT_FOUND,"Error, the vehicle not found");
     }
 
+    public Vehicle getByVehicleId(String id){
+        Optional<Vehicle> isVehiclePresent = vehicleRepository.findById(id);
+        if(isVehiclePresent.isPresent()) {
+            return vehicleRepository.findById(id).orElse(null);
+        }
+        throw ExceptionGenerator.getException(ExceptionType.NOT_FOUND,"Error, the vehicle not found");
+    }
+
+
     @Override
     public VehicleDto disableById(String id) {
-        VehicleDto vehicleDto= getByVehicleId(id);
-        Vehicle vehicle = modelMapper.map(vehicleDto, Vehicle.class);
+        Vehicle vehicle = getByVehicleId(id);
         vehicle.setIsActive(false);
         vehicle.setLastUpdate(new Date());
         vehicleRepository.save(vehicle);
@@ -77,7 +84,7 @@ public class VehicleServiceIMPL implements VehicleService {
     @Override
     public VehicleDto updateVehicle(VehicleDto vehicleDto, String id){
         Vehicle vehicle = modelMapper.map(vehicleDto,Vehicle.class);
-        Vehicle vehicleToUpdate = modelMapper.map(getByVehicleId(id),Vehicle.class);
+        Vehicle vehicleToUpdate = getByVehicleId(id);
         vehicleToUpdate.update(vehicle);
         vehicleRepository.save(vehicleToUpdate);
         return modelMapper.map(vehicleToUpdate, VehicleDto.class);
