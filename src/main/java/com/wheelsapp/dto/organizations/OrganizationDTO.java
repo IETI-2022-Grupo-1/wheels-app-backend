@@ -1,5 +1,8 @@
 package com.wheelsapp.dto.organizations;
 
+import com.wheelsapp.entities.constants.City;
+import com.wheelsapp.entities.constants.Departament;
+import lombok.Data;
 import org.springframework.data.mongodb.core.index.Indexed;
 
 import javax.validation.constraints.Size;
@@ -9,7 +12,9 @@ import java.util.Date;
 /**
  * @author Juan Andrés Pico
  */
+@Data
 public class OrganizationDTO {
+    private String id;
     @Size(max = 150)
     @Indexed(unique = true)
     private String name;
@@ -31,7 +36,7 @@ public class OrganizationDTO {
     private boolean isActive;
 
 
-    public OrganizationDTO(String name, String NIT, String city, String departament, String phone, Date createdAt, Date lastUpdate){
+    public OrganizationDTO(String name, String NIT, String city, String departament, String phone, Date createdAt, Date lastUpdate,boolean isActive){
         this();
         this.name = name;
         this.NIT = NIT;
@@ -40,6 +45,7 @@ public class OrganizationDTO {
         this.phone = phone;
         this.createdAt = createdAt;
         this.lastUpdate = lastUpdate;
+        this.isActive = isActive;
     }
 
     public OrganizationDTO(String name, String NIT, String city, String departament, String phone) {
@@ -51,75 +57,15 @@ public class OrganizationDTO {
         this.phone = phone;
     }
 
+    public OrganizationDTO(OrganizationDTO organizationDTO, Departament departament, City city){
+        this(organizationDTO.getName(), organizationDTO.getNIT(), city.getName(), departament.getName(),organizationDTO.getPhone());
+    }
+
+
     public OrganizationDTO(){
         this.createdAt = Date.from(Instant.now());
         this.lastUpdate = Date.from(Instant.now());
         this.isActive = true;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getNIT() {
-        return NIT;
-    }
-
-    public void setNIT(String NIT) {
-        this.NIT = NIT;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public void setDepartament(String departament) {
-        this.departament = departament;
-    }
-
-    public boolean isActive() {
-        return isActive;
-    }
-
-    public void setActive(boolean isActive) {
-        this.isActive = isActive;
-    }
-
-    public String getDepartament() {
-        return departament;
-    }
-
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public Date getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public Date getLastUpdate() {
-        return lastUpdate;
-    }
-
-    public void setLastUpdate(Date lastUpdate) {
-        this.lastUpdate = lastUpdate;
-    }
 }
-
