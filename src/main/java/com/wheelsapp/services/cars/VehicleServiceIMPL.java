@@ -1,75 +1,92 @@
 package com.wheelsapp.services.cars;
 
 
+import com.wheelsapp.dto.cars.VehicleDto;
 import com.wheelsapp.entities.cars.Vehicle;
-import com.wheelsapp.entities.users.User;
+import com.wheelsapp.exception.ExceptionGenerator;
+import com.wheelsapp.exception.ExceptionType;
 import com.wheelsapp.repositories.cars.VehicleRepository;
-import com.wheelsapp.repositories.users.UserRepository;
 import com.wheelsapp.services.users.UserService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
-import static com.wheelsapp.utils.RoleEnum.DRIVER;
 
 @Service
 public class VehicleServiceIMPL implements VehicleService {
     private final VehicleRepository vehicleRepository;
     private final UserService userService;
-    public VehicleServiceIMPL(@Autowired VehicleRepository vehicleRepository, @Autowired UserService userService){
+    private final ModelMapper modelMapper;
+    public VehicleServiceIMPL(@Autowired VehicleRepository vehicleRepository, @Autowired UserService userService, @Autowired ModelMapper modelMapper){
         this.vehicleRepository = vehicleRepository;
         this.userService = userService;
+        this.modelMapper = modelMapper;
     }
     @Override
-    public Vehicle create(Vehicle vehicle) {
-        vehicle.setCreatedAt(new Date());
-        vehicle.setLastUpdate(new Date());
-//        User user = userService.findById(vehicle.getIdUser());
-//        user.addRole(DRIVER);
-//        userService.createUser(user);
+    public VehicleDto create(VehicleDto vehicleDto) {
+        Vehicle vehicle = new Vehicle(vehicleDto);
         userService.createDriver(vehicle.getIdUser());
-        return vehicleRepository.save(vehicle);
+        vehicleRepository.save(vehicle);
+        return modelMapper.map(vehicle, VehicleDto.class);
     }
     @Override
-    public List<Vehicle> findAllByIdUser(String idUser) {
+    public List<VehicleDto> findAllByIdUser(String idUser) {
         List<Vehicle> x = vehicleRepository.findAll();
-        List<Vehicle> y = new ArrayList<Vehicle>();
+        List<VehicleDto> y = new ArrayList<>();
         for(Integer i = 0; i<x.size();i++){
             if(idUser.equals(x.get(i).getIdUser())){
-                y.add(x.get(i));
+                VehicleDto vehicle1 = modelMapper.map(x.get(i), VehicleDto.class);
+                y.add(vehicle1);
             }
         }
         return y;
     }
     @Override
-    public List<Vehicle> getAllVehicle() {
-
-        return vehicleRepository.findAll();
+    public List<VehicleDto> getAllVehicle() {
+        List<Vehicle> vehicles = vehicleRepository.findAll();
+        List<VehicleDto> vehicleDtos = new ArrayList<>();
+        for (Vehicle vehicle : vehicles) {
+            VehicleDto vehicle1 = modelMapper.map(vehicle, VehicleDto.class);
+            vehicleDtos.add(vehicle1);
+        }
+        return vehicleDtos;
+    }
+    @Override
+    public VehicleDto getByVehicleDtoId(String id){
+        Optional<Vehicle> isVehiclePresent = vehicleRepository.findById(id);
+        if(isVehiclePresent.isPresent()) {
+            return modelMapper.map(vehicleRepository.findById(id).orElse(null), VehicleDto.class);
+        }
+        throw ExceptionGenerator.getException(ExceptionType.NOT_FOUND,"Error, the vehicle not found");
     }
 
-
-    @Override
     public Vehicle getByVehicleId(String id){
-        return vehicleRepository.findById(id).orElse(null);
+        Optional<Vehicle> isVehiclePresent = vehicleRepository.findById(id);
+        if(isVehiclePresent.isPresent()) {
+            return vehicleRepository.findById(id).orElse(null);
+        }
+        throw ExceptionGenerator.getException(ExceptionType.NOT_FOUND,"Error, the vehicle not found");
     }
 
 
     @Override
-    public Vehicle disableById(String id) {
-        Vehicle vehicle =vehicleRepository.findById(id).orElse(null);
+    public VehicleDto disableById(String id) {
+        Vehicle vehicle = getByVehicleId(id);
         vehicle.setIsActive(false);
         vehicle.setLastUpdate(new Date());
         vehicleRepository.save(vehicle);
-        return vehicle;
+        return modelMapper.map(vehicle, VehicleDto.class);
     }
     @Override
-    public Vehicle updateVehicle(Vehicle vehicle, String id){
-        Vehicle vehicle1 = vehicleRepository.findById(id).orElse(null);
-        vehicle1.update(vehicle);
-        vehicleRepository.save(vehicle1);
-        return vehicle1;
+    public VehicleDto updateVehicle(VehicleDto vehicleDto, String id){
+        Vehicle vehicle = modelMapper.map(vehicleDto,Vehicle.class);
+        Vehicle vehicleToUpdate = getByVehicleId(id);
+        vehicleToUpdate.update(vehicle);
+        vehicleRepository.save(vehicleToUpdate);
+        return modelMapper.map(vehicleToUpdate, VehicleDto.class);
     }
 }

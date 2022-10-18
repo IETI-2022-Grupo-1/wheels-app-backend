@@ -1,11 +1,14 @@
 package com.wheelsapp.entities.cars;
 
 import com.wheelsapp.dto.cars.VehicleDto;
+import lombok.Data;
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
 
+@Data
 @Document(collection ="cars")
 public class Vehicle {
     private String idUser;
@@ -24,9 +27,8 @@ public class Vehicle {
 
     }
 
-    public Vehicle(String idUser, String idVehicle, String model, String soat, Integer puestos, String propertyCard, String description, String photo, boolean isActive) {
+    public Vehicle(String idUser, String model, String soat, Integer puestos, String propertyCard, String description, String photo, boolean isActive) {
         this.idUser = idUser;
-        this.idVehicle = idVehicle;
         this.model = model;
         this.soat = soat;
         this.puestos = puestos;
@@ -34,95 +36,32 @@ public class Vehicle {
         this.description = description;
         this.photo = photo;
         this.isActive = isActive;
+        this.createdAt = new Date();
+        this.lastUpdate = new Date();
+    }
+    public Vehicle(VehicleDto vehicleDto){
+        this.description=vehicleDto.getDescription();
+        this.isActive=vehicleDto.getIsActive();
+        this.model=vehicleDto.getModel();
+        this.idUser=vehicleDto.getIdUser();
+        this.soat = vehicleDto.getSoat() ;
+        this.puestos = vehicleDto.getPuestos();
+        this.propertyCard=vehicleDto.getPropertyCard();
+        this.photo=vehicleDto.getPhoto();
+        this.lastUpdate= new Date();
+        this.createdAt = new Date();
+
     }
 
-    public String getIdUser() {
-        return idUser;
-    }
-
-    public void setIdUser(String idUser) {
-        this.idUser = idUser;
-    }
-
-    public String getIdVehicle() {
-        return idVehicle;
-    }
-
-    public void setIdVehicle(String idVehicle) {
-        this.idVehicle = idVehicle;
-    }
-
-    public String getModel() {
-        return model;
-    }
-
-    public void setModel(String model) {
-        this.model = model;
-    }
-
-    public String getSoat() {
-        return soat;
-    }
-
-    public void setSoat(String soat) {
-        this.soat = soat;
-    }
-
-    public Integer getPuestos() {
-        return puestos;
-    }
-
-    public void setPuestos(Integer puestos) {
-        this.puestos = puestos;
-    }
-
-    public String getPropertyCard() {
-        return propertyCard;
-    }
-
-    public void setPropertyCard(String propertyCard) {
-        this.propertyCard = propertyCard;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getPhoto() {
-        return photo;
-    }
-
-    public void setPhoto(String photo) {
-        this.photo = photo;
-    }
 
     public boolean getIsActive() {
         return isActive;
-    }
+}
 
     public void setIsActive(boolean isActive) {
         this.isActive = isActive;
     }
 
-    public Date getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public Date getLastUpdate() {
-        return lastUpdate;
-    }
-
-    public void setLastUpdate(Date lastUpdate) {
-        this.lastUpdate = lastUpdate;
-    }
     public void update(Vehicle vehicle){
         this.description=vehicle.getDescription();
         this.isActive=vehicle.getIsActive();

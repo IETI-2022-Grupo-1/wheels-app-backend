@@ -1,16 +1,18 @@
 package com.wheelsapp.services.cars;
 
 
+import com.wheelsapp.dto.cars.VehicleDto;
 import com.wheelsapp.entities.cars.Vehicle;
 
 import java.util.List;
 
 public interface VehicleService {
-    Vehicle create(Vehicle vehicle);
-    List<Vehicle> getAllVehicle();
+    VehicleDto create(VehicleDto vehicle);
+    List<VehicleDto> getAllVehicle();
 
-    List<Vehicle> findAllByIdUser(String idUser);
+    List<VehicleDto> findAllByIdUser(String idUser);
     Vehicle getByVehicleId(String id);
-    Vehicle disableById(String id);
-    Vehicle updateVehicle(Vehicle vehicle, String id);
+    VehicleDto disableById(String id);
+    VehicleDto updateVehicle(VehicleDto vehicle, String id);
+    VehicleDto getByVehicleDtoId(String id);
 }
