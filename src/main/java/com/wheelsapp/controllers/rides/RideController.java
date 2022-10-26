@@ -14,6 +14,7 @@ import java.util.*;
  */
 
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping("/api/v1/rides")
 public class RideController {
     private final RideService rideService;

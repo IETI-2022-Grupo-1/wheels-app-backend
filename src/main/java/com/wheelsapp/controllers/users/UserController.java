@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @author Laura Garcia
  */
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping("/api/v1/users")
 public class UserController {
     private final UserService userService;
