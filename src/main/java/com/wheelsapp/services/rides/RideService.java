@@ -1,26 +1,36 @@
 package com.wheelsapp.services.rides;
 
-import com.wheelsapp.dto.rides.JourneyDto;
-import com.wheelsapp.entities.rides.Ride;
+import com.wheelsapp.dto.rides.RideDto;
 
-import java.text.ParseException;
 import java.util.List;
 
 /**
  * @author Juan Cadavid
  */
 public interface RideService {
-    Ride createRide(Ride ride);
-    List<Ride> getAllRides();
-    List<Ride> getRideByUser(String userId);
-    Ride getRideDetail(String id);
-    Ride updateRide(Ride ride, String id);
-    Ride deleteRide(String id);
-    List<Ride> getAllArrivalDate(String arrival_date) throws ParseException;
-    List<Ride> getAllDepartureDate(String departure_date) throws ParseException;
-    List<Ride> getAllSeatsDate(Integer seats_available);
-    List<Ride> getKeyword(String keyword);
-    Ride postReserveJourney(JourneyDto JourneyDto);
-    Ride deleteReserve(String idRide, String idUser);
-    Ride putReserveJourney(JourneyDto JourneyDto);
+    RideDto createRide(RideDto rideDto);
+
+    List<RideDto> getAllRides();
+
+    List<RideDto> getRideByUser(String userId);
+
+    RideDto getRideDetail(String id);
+
+    RideDto updateRide(RideDto rideDto, String id);
+
+    RideDto deleteRide(String id);
+
+    List<RideDto> getAllArrivalDate(String arrivalDate);
+
+    List<RideDto> getAllDepartureDate(String departureDate);
+
+    List<RideDto> getAllSeatsDate(Integer seatsAvailable);
+
+    List<RideDto> getKeyword(String keyword);
+
+    RideDto createReserve(RideDto rideDto);
+
+    RideDto deleteReserve(String idRide, String idUser);
+
+    RideDto putReserve(RideDto rideDto);
 }

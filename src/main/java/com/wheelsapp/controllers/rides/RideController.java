@@ -1,10 +1,7 @@
 package com.wheelsapp.controllers.rides;
 
-import com.wheelsapp.dto.rides.JourneyDto;
 import com.wheelsapp.dto.rides.RideDto;
-import com.wheelsapp.entities.rides.Ride;
 import com.wheelsapp.services.rides.RideService;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +14,7 @@ import java.util.*;
  */
 
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping("/api/v1/rides")
 public class RideController {
     private final RideService rideService;
@@ -27,161 +25,67 @@ public class RideController {
 
     @GetMapping
     public ResponseEntity<List<RideDto>> getAll() {
-        try {
-            ModelMapper modelMapper = new ModelMapper();
-            List<Ride> rides = rideService.getAllRides();
-            List<RideDto> rideDTO = new ArrayList<>();
-            for (Ride ride : rides) {
-                rideDTO.add(modelMapper.map(ride, RideDto.class));
-            }
-            return new ResponseEntity<>(rideDTO, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-        }
+        return new ResponseEntity<>(rideService.getAllRides(), HttpStatus.OK);
     }
 
-    @GetMapping("/{ride_id}")
-    public ResponseEntity<RideDto> getRideDetails(@PathVariable String ride_id){
-        ModelMapper modelMapper = new ModelMapper();
-        Ride ride = rideService.getRideDetail(ride_id);
-        RideDto rideDto = modelMapper.map(ride, RideDto.class);
-        return new ResponseEntity<RideDto>(rideDto, HttpStatus.OK);
+    @GetMapping("/{rideId}")
+    public ResponseEntity<RideDto> getRideDetails(@PathVariable String rideId) {
+        return new ResponseEntity<>(rideService.getRideDetail(rideId), HttpStatus.OK);
     }
 
-    @GetMapping("/user/{user_id}")
-    public ResponseEntity<List<RideDto>> getRidesByUser(@PathVariable String user_id) {
-        try {
-            ModelMapper modelMapper = new ModelMapper();
-            List<Ride> rides = rideService.getRideByUser(user_id);
-            List<RideDto> ridesDTO = new ArrayList<>();
-            for (Ride ride : rides) {
-                ridesDTO.add(modelMapper.map(ride, RideDto.class));
-            }
-            return new ResponseEntity<List<RideDto>>(ridesDTO, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-        }
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<RideDto>> getRidesByUser(@PathVariable String userId) {
+        return new ResponseEntity<>(rideService.getRideByUser(userId), HttpStatus.OK);
     }
 
-    @DeleteMapping("/{ride_id}")
-    public ResponseEntity<Boolean> deleteById(@PathVariable String ride_id) {
-        try {
-            rideService.deleteRide(ride_id);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (Exception e){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+    @DeleteMapping("/{rideId}")
+    public ResponseEntity<RideDto> deleteById(@PathVariable String rideId) {
+        return new ResponseEntity<>(rideService.deleteRide(rideId), HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<RideDto> create(@RequestBody RideDto rideDto){
-        ModelMapper modelMapper = new ModelMapper();
-        Ride ride = rideService.createRide(new Ride(rideDto));
-        RideDto rideDTO = modelMapper.map(ride, RideDto.class);
-        return new ResponseEntity<RideDto>(rideDTO, HttpStatus.CREATED);
+    public ResponseEntity<RideDto> create(@RequestBody RideDto rideDto) {
+        return new ResponseEntity<>(rideService.createRide(rideDto), HttpStatus.CREATED);
     }
 
-    @PutMapping("/{ride_id}")
-    public ResponseEntity<RideDto> update(@RequestBody RideDto rideDto, @PathVariable String ride_id){
-        ModelMapper modelMapper = new ModelMapper();
-        Ride ride = new Ride(rideDto);
-        rideService.updateRide(ride, ride_id);
-        RideDto rideDTO = modelMapper.map(ride, RideDto.class);
-        return new ResponseEntity<RideDto>(rideDTO, HttpStatus.OK);
+    @PutMapping("/{rideId}")
+    public ResponseEntity<RideDto> update(@RequestBody RideDto rideDto, @PathVariable String rideId) {
+        return new ResponseEntity<>(rideService.updateRide(rideDto, rideId), HttpStatus.OK);
     }
 
-    @GetMapping("/arrival/{arrival_date}")
-    public ResponseEntity<List<RideDto>> getAllArrivalDate(@PathVariable String arrival_date) {
-        try {
-            ModelMapper modelMapper = new ModelMapper();
-            List<Ride> rides = rideService.getAllArrivalDate(arrival_date);
-            List<RideDto> ridesDto = new ArrayList<>();
-            for (Ride ride : rides) {
-                ridesDto.add(modelMapper.map(ride, RideDto.class));
-            }
-            return new ResponseEntity<>(ridesDto, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-        }
+    @GetMapping("/arrival/{arrivalDate}")
+    public ResponseEntity<List<RideDto>> getAllArrivalDate(@PathVariable String arrivalDate) {
+        return new ResponseEntity<>(rideService.getAllArrivalDate(arrivalDate), HttpStatus.OK);
     }
 
-    @GetMapping("/departure/{departure_date}")
-    public ResponseEntity<List<RideDto>> getAllDepartureDate(@PathVariable String departure_date) {
-        try {
-            ModelMapper modelMapper = new ModelMapper();
-            List<Ride> rides = rideService.getAllDepartureDate(departure_date);
-            List<RideDto> ridesDto = new ArrayList<>();
-            for (Ride ride : rides) {
-                ridesDto.add(modelMapper.map(ride, RideDto.class));
-            }
-            return new ResponseEntity<>(ridesDto, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-        }
+    @GetMapping("/departure/{departureDate}")
+    public ResponseEntity<List<RideDto>> getAllDepartureDate(@PathVariable String departureDate) {
+        return new ResponseEntity<>(rideService.getAllDepartureDate(departureDate), HttpStatus.OK);
     }
 
-    @GetMapping("/seats-available/{seats_available}")
-    public ResponseEntity<List<RideDto>> getAllSeatsDate(@PathVariable Integer seats_available) {
-        try {
-            ModelMapper modelMapper = new ModelMapper();
-            List<Ride> rides = rideService.getAllSeatsDate(seats_available);
-            List<RideDto> ridesDto = new ArrayList<>();
-            for (Ride ride : rides) {
-                ridesDto.add(modelMapper.map(ride, RideDto.class));
-            }
-            return new ResponseEntity<>(ridesDto, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-        }
+    @GetMapping("/seats-available/{seatsAvailable}")
+    public ResponseEntity<List<RideDto>> getAllSeatsDate(@PathVariable Integer seatsAvailable) {
+        return new ResponseEntity<>(rideService.getAllSeatsDate(seatsAvailable), HttpStatus.OK);
+
     }
 
     @GetMapping("keyword/{keyword}")
     public ResponseEntity<List<RideDto>> getKeyword(@PathVariable String keyword) {
-        try {
-            ModelMapper modelMapper = new ModelMapper();
-            List<Ride> rides = rideService.getKeyword(keyword);
-            List<RideDto> ridesDto = new ArrayList<>();
-            for (Ride ride : rides) {
-                ridesDto.add(modelMapper.map(ride, RideDto.class));
-            }
-            return new ResponseEntity<>(ridesDto, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-        }
-    }
-    @PostMapping("journey/reserve")
-    public ResponseEntity<RideDto> postReserveJourney(@RequestBody JourneyDto journeyDto){
-        try {
-            ModelMapper modelMapper = new ModelMapper();
-            Ride ride = rideService.postReserveJourney(journeyDto);
-            RideDto rideDTO = modelMapper.map(ride, RideDto.class);
-            return new ResponseEntity<>(rideDTO, HttpStatus.CREATED);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-        }
+        return new ResponseEntity<>(rideService.getKeyword(keyword), HttpStatus.OK);
     }
 
-    @DeleteMapping("journey/{idRide}/{idUser}")
+    @PostMapping("/reserve")
+    public ResponseEntity<RideDto> postReserve(@RequestBody RideDto rideDto) {
+        return new ResponseEntity<>(rideService.createReserve(rideDto), HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/reserve/{idRide}/{idUser}")
     public ResponseEntity<RideDto> deleteReserve(@PathVariable String idRide, @PathVariable String idUser) {
-        try{
-            ModelMapper modelMapper = new ModelMapper();
-            Ride ride = rideService.deleteReserve(idRide, idUser);
-            RideDto rideDTO = modelMapper.map(ride, RideDto.class);
-            return new ResponseEntity<>(rideDTO, HttpStatus.OK);
-        }catch (Exception e){
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-        }
+        return new ResponseEntity<>(rideService.deleteReserve(idRide, idUser), HttpStatus.OK);
     }
 
-    @PutMapping("/journey/reserve")
-    public ResponseEntity<RideDto> update(@RequestBody JourneyDto journeyDto){
-        try {
-            ModelMapper modelMapper = new ModelMapper();
-            Ride ride = rideService.putReserveJourney(journeyDto);
-            RideDto rideDTO = modelMapper.map(ride, RideDto.class);
-            return new ResponseEntity<>(rideDTO, HttpStatus.CREATED);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-        }
+    @PutMapping("/reserve")
+    public ResponseEntity<RideDto> updateReserve(@RequestBody RideDto rideDto) {
+        return new ResponseEntity<>(rideService.putReserve(rideService.putReserve(rideDto)), HttpStatus.CREATED);
     }
 }

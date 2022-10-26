@@ -1,26 +1,25 @@
 package com.wheelsapp.controllers.auth;
 
+import java.util.Date;
+import java.util.Calendar;
+import io.jsonwebtoken.Jwts;
 import com.wheelsapp.dto.auth.LoginDto;
 import com.wheelsapp.dto.auth.TokenDto;
 import com.wheelsapp.entities.users.User;
-import com.wheelsapp.services.users.UserService;
-import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import com.wheelsapp.exception.ExceptionType;
+import com.wheelsapp.services.users.UserService;
+import com.wheelsapp.exception.ExceptionGenerator;
 import org.springframework.security.crypto.bcrypt.BCrypt;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Calendar;
-import java.util.Date;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import static com.wheelsapp.utils.constants.Constants.CLAIMS_ROLES_KEY;
 import static com.wheelsapp.utils.constants.Constants.TOKEN_DURATION_MINUTES;
 
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping("api/v1/auth")
 public class AuthController {
     @Value( "${app.secret}" )
@@ -35,15 +34,11 @@ public class AuthController {
     @PostMapping
     public TokenDto login(@RequestBody LoginDto loginDto) {
         User user = userService.findByEmail(loginDto.getEmail());
-
         if (BCrypt.checkpw(loginDto.getPassword(), user.getPassword())) {
             return generateTokenDto(user);
         } else {
-            // TODO: How to return an error?
-            //throw new InvalidCredentialsException();
-            return null;
+            throw ExceptionGenerator.getException(ExceptionType.INVALID_CREDENTIALS, "Invalid credentials");
         }
-
     }
 
     private String generateToken(User user, Date expirationDate) {
