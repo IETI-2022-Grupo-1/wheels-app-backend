@@ -38,6 +38,11 @@ public class RideController {
         return new ResponseEntity<>(rideService.getRideByUser(userId), HttpStatus.OK);
     }
 
+    @GetMapping("/user/historical/{userId}")
+    public ResponseEntity<List<RideDto>> getHistoricalRidesByUser(@PathVariable String userId) {
+        return new ResponseEntity<>(rideService.getHistoricalRidesByUser(userId), HttpStatus.OK);
+    }
+
     @DeleteMapping("/{rideId}")
     public ResponseEntity<RideDto> deleteById(@PathVariable String rideId) {
         return new ResponseEntity<>(rideService.deleteRide(rideId), HttpStatus.OK);
