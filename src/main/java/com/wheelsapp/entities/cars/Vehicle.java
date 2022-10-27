@@ -14,9 +14,10 @@ public class Vehicle {
     private String idUser;
     @Id
     private String idVehicle;
+    private String licensePlate;
     private String model;
     private String soat;
-    private Integer puestos;
+    private Integer seats;
     private String propertyCard;
     private String description;
     private String photo;
@@ -27,11 +28,12 @@ public class Vehicle {
 
     }
 
-    public Vehicle(String idUser, String model, String soat, Integer puestos, String propertyCard, String description, String photo, boolean isActive) {
+    public Vehicle(String idUser, String licensePlate, String model, String soat, Integer seats, String propertyCard, String description, String photo, boolean isActive) {
         this.idUser = idUser;
+        this.licensePlate = licensePlate;
         this.model = model;
         this.soat = soat;
-        this.puestos = puestos;
+        this.seats = seats;
         this.propertyCard = propertyCard;
         this.description = description;
         this.photo = photo;
@@ -41,11 +43,12 @@ public class Vehicle {
     }
     public Vehicle(VehicleDto vehicleDto){
         this.description=vehicleDto.getDescription();
-        this.isActive=vehicleDto.getIsActive();
+        this.isActive=vehicleDto.isActive();
+        this.licensePlate = vehicleDto.getLicensePlate();
         this.model=vehicleDto.getModel();
         this.idUser=vehicleDto.getIdUser();
         this.soat = vehicleDto.getSoat() ;
-        this.puestos = vehicleDto.getPuestos();
+        this.seats = vehicleDto.getSeats();
         this.propertyCard=vehicleDto.getPropertyCard();
         this.photo=vehicleDto.getPhoto();
         this.lastUpdate= new Date();
@@ -68,7 +71,7 @@ public class Vehicle {
         this.model=vehicle.getModel();
         this.idUser=vehicle.getIdUser();
         this.soat = vehicle.getSoat() ;
-        this.puestos = vehicle.getPuestos();
+        this.seats = vehicle.getSeats();
         this.propertyCard=vehicle.getPropertyCard();
         this.photo=vehicle.getPhoto();
         this.lastUpdate= new Date();
