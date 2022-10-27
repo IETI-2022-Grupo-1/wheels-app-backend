@@ -4,7 +4,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.wheelsapp.entities.constants.City;
 import com.wheelsapp.entities.organizations.Organization;
+import com.wheelsapp.services.constants.DepartamentService;
 import com.wheelsapp.services.organizations.OrganizationService;
 import org.modelmapper.ModelMapper;
 import com.wheelsapp.utils.RoleEnum;
@@ -39,8 +41,8 @@ public class UserServiceMongo implements UserService {
     @Override
     public UserDto createUser(UserDto userDto) {
         Organization organization = organizationService.findById(userDto.getOrganization());
-        Boolean userByEmail = userRepository.findByEmail(userDto.getEmail()) == null;
-        if(userByEmail){
+        Boolean existsUser = userRepository.findByEmail(userDto.getEmail()).isPresent();
+        if(!existsUser){
             User user = new User(userDto, organization);
             userRepository.save(user);
             return modelMapper.map(user, UserDto.class);
@@ -50,7 +52,7 @@ public class UserServiceMongo implements UserService {
 
     @Override
     public UserAdminDto createAdmin(UserAdminDto userAdminDto) {
-        Boolean userByEmail = userRepository.findByEmail(userAdminDto.getEmail()) == null;
+        Boolean userByEmail = userRepository.findByEmail(userAdminDto.getEmail()).get() == null;
         if(userByEmail){
             User user = new User(userAdminDto);
             userRepository.save(user);
