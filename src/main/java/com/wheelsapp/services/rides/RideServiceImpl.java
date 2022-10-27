@@ -14,7 +14,6 @@ import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.*;
 
-
 /**
  * @author Juan Cadavid
  */
@@ -50,16 +49,33 @@ public class RideServiceImpl implements RideService {
         boolean flag = false;
         List<RideDto> rides = new ArrayList<>();
         Date date = Date.from(Instant.now());
-        for (RideDto ride: getAllRides()){
+        for (RideDto ride : getAllRides()) {
             if (ride.getJourneyDate().after(date) && ride.getIdDriver().equals(userId)) {
                 flag = false;
                 rides.add(getRideDetail(ride.getId()));
-            }
-            else {
+            } else {
                 flag = true;
             }
         }
-        if(flag) {
+        if (flag) {
+            throw ExceptionGenerator.getException(ExceptionType.NOT_FOUND, "Rides not found");
+        }
+        return rides;
+    }
+
+    @Override
+    public List<RideDto> getHistoricalRidesByUser(String userId) {
+        boolean flag = false;
+        List<RideDto> rides = new ArrayList<>();
+        for (RideDto ride : getAllRides()) {
+            if (ride.getIdDriver().equals(userId)) {
+                flag = false;
+                rides.add(getRideDetail(ride.getId()));
+            } else {
+                flag = true;
+            }
+        }
+        if (flag) {
             throw ExceptionGenerator.getException(ExceptionType.NOT_FOUND, "Rides not found");
         }
         return rides;
@@ -108,7 +124,8 @@ public class RideServiceImpl implements RideService {
         List<RideDto> rides = new ArrayList<>();
         Date date = convertStringDate(arrivalDate);
         for (RideDto ride : getAllRides()) {
-            if (ride.getIsActive() && ride.getArrivalHour() != null && validateDate(convertDateCalendar(ride.getArrivalHour()), convertDateCalendar(date))) {
+            if (ride.getIsActive() && ride.getArrivalHour() != null
+                    && validateDate(convertDateCalendar(ride.getArrivalHour()), convertDateCalendar(date))) {
                 rides.add(ride);
             }
         }
@@ -120,7 +137,8 @@ public class RideServiceImpl implements RideService {
         List<RideDto> rides = new ArrayList<>();
         Date date = convertStringDate(departureDate);
         for (RideDto ride : getAllRides()) {
-            if (ride.getIsActive() && ride.getDepartureHour() != null && validateDate(convertDateCalendar(ride.getDepartureHour()), convertDateCalendar(date))) {
+            if (ride.getIsActive() && ride.getDepartureHour() != null
+                    && validateDate(convertDateCalendar(ride.getDepartureHour()), convertDateCalendar(date))) {
                 rides.add(ride);
             }
         }
@@ -199,8 +217,10 @@ public class RideServiceImpl implements RideService {
             ride = rideOpt.get();
         }
         ArrayList<String> keys = new ArrayList<>(ride.getStopsList().keySet());
-        ArrayList<String> passengers = removePassenger(new ArrayList<>(ride.getPassengerList()), ride, keys.get(0).split("-")[0]);
-        HashMap<String, String> stops = removeStops(new HashMap<>(ride.getStopsList()), ride, keys.get(0).split("-")[0]);
+        ArrayList<String> passengers = removePassenger(new ArrayList<>(ride.getPassengerList()), ride,
+                keys.get(0).split("-")[0]);
+        HashMap<String, String> stops = removeStops(new HashMap<>(ride.getStopsList()), ride,
+                keys.get(0).split("-")[0]);
         int availableSeats = ride.getAvailableSeats() + ride.getPassengerList().size() - passengers.size();
         int seatsReserved = ride.getSeatsReserved() - ride.getPassengerList().size() - passengers.size();
         if (rideDto.getStopsList().size() > availableSeats) {
@@ -237,13 +257,17 @@ public class RideServiceImpl implements RideService {
     }
 
     private Boolean validateDate(Calendar calRide, Calendar cal) {
-        return calRide.get(Calendar.YEAR) == cal.get(Calendar.YEAR) && calRide.get(Calendar.MONTH) == cal.get(Calendar.MONTH) && calRide.get(Calendar.DATE) == cal.get(Calendar.DATE) && calRide.get(Calendar.HOUR) == cal.get(Calendar.HOUR);
+        return calRide.get(Calendar.YEAR) == cal.get(Calendar.YEAR)
+                && calRide.get(Calendar.MONTH) == cal.get(Calendar.MONTH)
+                && calRide.get(Calendar.DATE) == cal.get(Calendar.DATE)
+                && calRide.get(Calendar.HOUR) == cal.get(Calendar.HOUR);
     }
 
     private ArrayList<String> removePassenger(ArrayList<String> passengersRemove, Ride ride, String idUser) {
         for (String i : ride.getPassengerList()) {
             if ((i.equals(idUser)) && (!passengersRemove.remove(idUser))) {
-                throw ExceptionGenerator.getException(ExceptionType.NOT_FOUND, "The passenger was impossible to delete");
+                throw ExceptionGenerator.getException(ExceptionType.NOT_FOUND,
+                        "The passenger was impossible to delete");
             }
         }
         return passengersRemove;

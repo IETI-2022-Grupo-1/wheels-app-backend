@@ -16,6 +16,8 @@ public interface RideService {
 
     RideDto getRideDetail(String id);
 
+    List<RideDto> getHistoricalRidesByUser(String userId);
+
     RideDto updateRide(RideDto rideDto, String id);
 
     RideDto deleteRide(String id);
